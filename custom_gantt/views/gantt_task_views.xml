@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         GANTT TASK – SEARCH VIEW
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="view_gantt_task_search" model="ir.ui.view">
+        <field name="name">gantt.task.search</field>
+        <field name="model">gantt.task</field>
+        <field name="arch" type="xml">
+            <search string="Search Tasks">
+                <field name="name" string="Task"/>
+                <field name="project_id"/>
+                <field name="user_id"/>
+                <field name="stage_id"/>
+                <field name="tag_ids"/>
+
+                <!-- Filters -->
+                <filter string="My Tasks" name="my_tasks"
+                        domain="[('user_id', '=', uid)]"/>
+                <filter string="Milestones" name="milestones"
+                        domain="[('is_milestone', '=', True)]"/>
+                <filter string="In Progress" name="in_progress"
+                        domain="[('progress', '>', 0), ('progress', '&lt;', 100)]"/>
+                <filter string="Done" name="done"
+                        domain="[('progress', '=', 100)]"/>
+                <filter string="High Priority" name="high_priority"
+                        domain="[('priority', 'in', ('2', '3'))]"/>
+                <separator/>
+                <filter string="Archived" name="archived"
+                        domain="[('active', '=', False)]"/>
+
+                <!-- Group By -->
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Stage" name="group_stage"
+                            context="{'group_by': 'stage_id'}"/>
+                    <filter string="Assigned To" name="group_user"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter string="Priority" name="group_priority"
+                            context="{'group_by': 'priority'}"/>
+                    <filter string="Start Date" name="group_start"
+                            context="{'group_by': 'date_start:month'}"/>
+                </group>
+
+                <!-- Favorites -->
+                <searchpanel>
+                    <field name="project_id" icon="fa-folder" limit="0"/>
+                    <field name="stage_id" icon="fa-tasks" limit="0"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ACTION WINDOWS
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Tasks action — standard list/kanban/form -->
+    <record id="action_gantt_task" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">gantt.task</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_gantt_task_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No tasks yet!</p>
+            <p>Create your first task and visualise it on the Gantt chart.</p>
+        </field>
+    </record>
+
+    <!-- Gantt Chart — client action (Community compatible) -->
+    <record id="action_gantt_chart_client" model="ir.actions.client">
+        <field name="name">Gantt Chart</field>
+        <field name="tag">custom_gantt.GanttChartAction</field>
+    </record>
+
+    <!-- Projects action -->
+    <record id="action_gantt_project" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">gantt.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first project!
+            </p>
+        </field>
+    </record>
+
+    <!-- Stages action -->
+    <record id="action_gantt_stage" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">gantt.stage</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Tags action -->
+    <record id="action_gantt_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">gantt.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         GANTT PROJECT – FORM VIEW (with Gantt Chart button)
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="view_gantt_project_form" model="ir.ui.view">
+        <field name="name">gantt.project.form</field>
+        <field name="model">gantt.project</field>
+        <field name="arch" type="xml">
+            <form string="Project">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_gantt"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-tasks"
+                                string="Gantt Chart"/>
+                        <button name="action_open_mom"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o"
+                                string="MOM"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Project Name..."/></h1>
+                    </div>
+                    <group>
+                        <group string="Details">
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="partner_id"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                        <group string="Timeline">
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="task_count" string="Total Tasks"/>
+                        </group>
+                    </group>
+                    <notebook>
+<!--                        <page string="Description">-->
+<!--                            <field name="description" placeholder="Project description..."/>-->
+<!--                        </page>-->
+                        <page string="Tasks">
+                            <field name="task_ids">
+                                <list editable="bottom">
+                                    <field name="sequence_handle" widget="handle"/>
+                                    <field name="serial_no" string="No." readonly="1"/>
+                                    <field name="name"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="stage_id"/>
+                                    <field name="date_start" string="Planned Start"/>
+                                    <field name="date_stop" string="Planned End"/>
+                                    <field name="actual_date_start" string="Actual Start" optional="show"/>
+                                    <field name="actual_date_stop" string="Actual End" optional="show"/>
+                                    <field name="parent_id" string="Parent Task"/>
+                                    <field name="subtask_count" string="Sub-tasks" optional="show"/>
+                                    <field name="remark" string="Remark" optional="show"/>
+                                    <field name="priority" widget="priority" optional="show"/>
+                                    <field name="progress" widget="progressbar" options="{'editable': True, 'max_value': 100}"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         GANTT TASK – FORM VIEW
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="view_gantt_task_form" model="ir.ui.view">
+        <field name="name">gantt.task.form</field>
+        <field name="model">gantt.task</field>
+        <field name="arch" type="xml">
+            <form string="Task">
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mark_done" type="object"
+                                class="oe_stat_button" icon="fa-check"
+                                string="Mark Done"
+                                invisible="progress == 100"/>
+                        <button name="action_reset_to_draft" type="object"
+                                class="oe_stat_button" icon="fa-undo"
+                                string="Reset"
+                                invisible="progress == 0"/>
+                        <button type="object" name="action_open_subtasks"
+                                class="oe_stat_button" icon="fa-sitemap"
+                                invisible="subtask_count == 0">
+                            <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Task Name..."/></h1>
+                    </div>
+                    <group>
+                        <group string="Assignment">
+                            <field name="project_id"/>
+                            <field name="parent_id" string="Parent Task"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="stage_id"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                        <group string="Progress">
+                            <field name="progress" widget="progressbar"
+                                   options="{'editable': True, 'max_value': 100}"/>
+                            <field name="is_milestone"/>
+                        </group>
+                    </group>
+                    <group string="Planned Dates">
+                        <group>
+                            <field name="date_start" string="Planned Start"/>
+                            <field name="date_stop" string="Planned End"
+                                   readonly="is_milestone"/>
+                        </group>
+                        <group>
+                            <field name="duration" string="Planned Duration (days)" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Actual Dates">
+                        <group>
+                            <field name="actual_date_start" string="Actual Start"/>
+                            <field name="actual_date_stop" string="Actual End"/>
+                        </group>
+                        <group>
+                            <field name="actual_duration" string="Actual Duration (days)" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" placeholder="Describe the task..."/>
+                        </page>
+                        <page string="Sub-tasks">
+                            <field name="child_ids">
+                                <list editable="bottom">
+                                    <field name="name" string="Sub-task Name" required="1"/>
+                                    <field name="user_id" widget="many2one_avatar_user" string="Assigned To"/>
+                                    <field name="stage_id"/>
+                                    <field name="date_start" string="Planned Start"/>
+                                    <field name="date_stop" string="Planned End"/>
+                                    <field name="actual_date_start" string="Actual Start" optional="show"/>
+                                    <field name="actual_date_stop" string="Actual End" optional="show"/>
+                                    <field name="progress" widget="progressbar"
+                                           options="{'editable': True, 'max_value': 100}"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         GANTT TASK – LIST VIEW
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="view_gantt_task_list" model="ir.ui.view">
+        <field name="name">gantt.task.list</field>
+        <field name="model">gantt.task</field>
+        <field name="arch" type="xml">
+            <list string="Tasks"
+                  decoration-success="progress == 100"
+                  decoration-warning="priority in ('2', '3')">
+                <field name="serial_no" string="No." readonly="1"/>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="stage_id" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="date_start" string="Planned Start"/>
+                <field name="date_stop" string="Planned End"/>
+                <field name="actual_date_start" string="Actual Start" optional="show"/>
+                <field name="actual_date_stop" string="Actual End" optional="show"/>
+                <field name="duration" string="Planned Days" optional="show"/>
+                <field name="actual_duration" string="Actual Days" optional="show"/>
+                <field name="priority" widget="priority" optional="show"/>
+                <field name="progress" widget="progressbar" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

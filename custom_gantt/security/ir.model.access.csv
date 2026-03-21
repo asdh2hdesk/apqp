@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gantt_task_user,gantt.task user,model_gantt_task,base.group_user,1,1,1,0
+access_gantt_task_manager,gantt.task manager,model_gantt_task,base.group_system,1,1,1,1
+access_gantt_project_user,gantt.project user,model_gantt_project,base.group_user,1,1,1,0
+access_gantt_project_manager,gantt.project manager,model_gantt_project,base.group_system,1,1,1,1
+access_gantt_stage_user,gantt.stage user,model_gantt_stage,base.group_user,1,0,0,0
+access_gantt_stage_manager,gantt.stage manager,model_gantt_stage,base.group_system,1,1,1,1
+access_gantt_tag_user,gantt.tag user,model_gantt_tag,base.group_user,1,1,1,0
+access_gantt_tag_manager,gantt.tag manager,model_gantt_tag,base.group_system,1,1,1,1

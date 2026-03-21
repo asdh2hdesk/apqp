@@ -1,0 +1,95 @@
+// custom_gantt/static/src/scss/gantt_custom.scss
+// ─────────────────────────────────────────────────────────────────────────────
+// Custom styling for the Gantt Chart module
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Milestone pills ──────────────────────────────────────────────────────────
+.o_gantt_pill.o_gantt_milestone {
+    border-radius: 50% !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: unset !important;
+    background-color: var(--o-color-warning, #f0ad4e) !important;
+
+    &::after {
+        content: "◆";
+        font-size: 10px;
+        line-height: 20px;
+        color: white;
+    }
+}
+
+// ── Progress stripe inside each Gantt bar ────────────────────────────────────
+.o_gantt_pill {
+    position: relative;
+    overflow: hidden;
+
+    .o_gantt_progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: inherit;
+        pointer-events: none;
+        transition: width 0.3s ease;
+    }
+}
+
+// ── Priority colour accents ───────────────────────────────────────────────────
+.o_gantt_pill[data-priority="3"] {   // Critical
+    border-left: 4px solid #dc3545 !important;
+}
+
+.o_gantt_pill[data-priority="2"] {   // Very Urgent
+    border-left: 4px solid #fd7e14 !important;
+}
+
+.o_gantt_pill[data-priority="1"] {   // Important
+    border-left: 4px solid #ffc107 !important;
+}
+
+// ── Completed tasks ───────────────────────────────────────────────────────────
+.o_gantt_pill.o_gantt_done {
+    opacity: 0.65;
+    text-decoration: line-through;
+}
+
+// ── Row hover highlight ───────────────────────────────────────────────────────
+.o_gantt_row:hover {
+    background-color: var(--o-bg-secondary, #f8f9fa);
+    transition: background-color 0.15s ease;
+}
+
+// ── Today indicator line ──────────────────────────────────────────────────────
+.o_gantt_today_indicator {
+    background: linear-gradient(
+        to bottom,
+        rgba(var(--o-brand-primary-rgb, 113, 75, 103), 0.8),
+        rgba(var(--o-brand-primary-rgb, 113, 75, 103), 0.2)
+    );
+    width: 2px;
+    pointer-events: none;
+}
+
+// ── Dependency arrows ─────────────────────────────────────────────────────────
+.o_gantt_connector {
+    stroke: var(--o-color-info, #17a2b8);
+    stroke-width: 2px;
+    fill: none;
+    marker-end: url(#o_gantt_arrow);
+}
+
+// ── Group header rows ─────────────────────────────────────────────────────────
+.o_gantt_group_row .o_gantt_row_header {
+    font-weight: 600;
+    background-color: var(--o-bg-secondary, #f0f0f0);
+    border-bottom: 1px solid var(--o-border-color, #dee2e6);
+}
+
+// ── Consolidation total row ───────────────────────────────────────────────────
+.o_gantt_total_row {
+    background-color: var(--o-bg-tertiary, #e9ecef);
+    font-weight: 700;
+    border-top: 2px solid var(--o-border-color, #dee2e6);
+}

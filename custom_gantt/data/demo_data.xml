@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Stages -->
+    <record id="stage_draft" model="gantt.stage">
+        <field name="name">Draft</field>
+        <field name="sequence">1</field>
+        <field name="color">0</field>
+    </record>
+    <record id="stage_in_progress" model="gantt.stage">
+        <field name="name">In Progress</field>
+        <field name="sequence">2</field>
+        <field name="color">2</field>
+    </record>
+    <record id="stage_review" model="gantt.stage">
+        <field name="name">Review</field>
+        <field name="sequence">3</field>
+        <field name="color">4</field>
+    </record>
+    <record id="stage_done" model="gantt.stage">
+        <field name="name">Done</field>
+        <field name="sequence">4</field>
+        <field name="color">10</field>
+    </record>
+
+    <!-- Demo Tags -->
+    <record id="tag_backend" model="gantt.tag">
+        <field name="name">Backend</field>
+        <field name="color">1</field>
+    </record>
+    <record id="tag_frontend" model="gantt.tag">
+        <field name="name">Frontend</field>
+        <field name="color">3</field>
+    </record>
+    <record id="tag_design" model="gantt.tag">
+        <field name="name">Design</field>
+        <field name="color">5</field>
+    </record>
+
+    <!-- Demo Project -->
+    <record id="project_website_launch" model="gantt.project">
+        <field name="name">Website Launch</field>
+        <field name="date_start">2025-01-01</field>
+        <field name="date_end">2025-03-31</field>
+    </record>
+
+    <!-- Demo Tasks -->
+    <record id="task_requirements" model="gantt.task">
+        <field name="name">Gather Requirements</field>
+        <field name="project_id" ref="project_website_launch"/>
+        <field name="stage_id" ref="stage_done"/>
+        <field name="date_start">2025-01-01 09:00:00</field>
+        <field name="date_stop">2025-01-07 18:00:00</field>
+        <field name="priority">1</field>
+        <field name="progress">100</field>
+        <field name="tag_ids" eval="[(4, ref('tag_backend')), (4, ref('tag_frontend'))]"/>
+    </record>
+
+    <record id="task_design" model="gantt.task">
+        <field name="name">UI/UX Design</field>
+        <field name="project_id" ref="project_website_launch"/>
+        <field name="stage_id" ref="stage_in_progress"/>
+        <field name="date_start">2025-01-08 09:00:00</field>
+        <field name="date_stop">2025-01-21 18:00:00</field>
+        <field name="priority">2</field>
+        <field name="progress">60</field>
+        <field name="tag_ids" eval="[(4, ref('tag_design'))]"/>
+        <field name="depend_on_ids" eval="[(4, ref('task_requirements'))]"/>
+    </record>
+
+    <record id="task_development" model="gantt.task">
+        <field name="name">Backend Development</field>
+        <field name="project_id" ref="project_website_launch"/>
+        <field name="stage_id" ref="stage_in_progress"/>
+        <field name="date_start">2025-01-15 09:00:00</field>
+        <field name="date_stop">2025-02-15 18:00:00</field>
+        <field name="priority">2</field>
+        <field name="progress">30</field>
+        <field name="tag_ids" eval="[(4, ref('tag_backend'))]"/>
+        <field name="depend_on_ids" eval="[(4, ref('task_requirements'))]"/>
+    </record>
+
+    <record id="task_launch_milestone" model="gantt.task">
+        <field name="name">Launch Day</field>
+        <field name="project_id" ref="project_website_launch"/>
+        <field name="stage_id" ref="stage_draft"/>
+        <field name="date_start">2025-03-31 09:00:00</field>
+        <field name="date_stop">2025-03-31 09:00:00</field>
+        <field name="is_milestone">True</field>
+        <field name="priority">3</field>
+        <field name="progress">0</field>
+    </record>
+</odoo>

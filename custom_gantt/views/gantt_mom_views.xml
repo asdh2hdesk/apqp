@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══ MOM LIST VIEW ══════════════════════════════════════════════ -->
+    <record id="view_gantt_mom_list" model="ir.ui.view">
+        <field name="name">gantt.mom.list</field>
+        <field name="model">gantt.mom</field>
+        <field name="arch" type="xml">
+            <list string="Minutes of Meeting" decoration-info="1==1">
+<!--                <field name="date"/>-->
+                <field name="subject"/>
+                <field name="project_id"/>
+                <field name="champion_id" widget="many2one_avatar_user"/>
+<!--                <field name="attendees"/>-->
+            </list>
+        </field>
+    </record>
+
+    <!-- ══ MOM FORM VIEW ══════════════════════════════════════════════ -->
+    <record id="view_gantt_mom_form" model="ir.ui.view">
+        <field name="name">gantt.mom.form</field>
+        <field name="model">gantt.mom</field>
+        <field name="arch" type="xml">
+            <form string="Minutes of Meeting">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="subject" placeholder="Meeting Subject..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Meeting Info">
+                            <field name="project_id"/>
+                            <field name="champion_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="CFT Team">
+                            <field name="cft_team_ids" widget="many2many_avatar_user"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="MOM Points">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence" string="Sr. No." readonly="1" width="70px"/>
+                                    <field name="points" string="Points Discussed" width="320px"/>
+                                    <field name="date" string="Meeting Date" width="150px"/>
+                                    <field name="attendee_ids" string="Attendees" widget="many2many_tags"/>
+                                    <field name="responsible_id" width="150px"
+                                           string="Responsible"/>
+                                    <field name="remark" string="Remark" width="250px"/>
+                                    <field name="target_date" string="Target Date" width="120px"/>
+                                    <field name="completion_date" string="Actual Completion Date" width="150px"/>
+                                    <field name="status" string="Status"/>
+                                    <field name="attachment_ids" string="Attachments" widget="many2many_binary"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Additional Notes">
+                            <field name="notes" placeholder="Any additional notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══ MOM SEARCH VIEW ════════════════════════════════════════════ -->
+    <record id="view_gantt_mom_search" model="ir.ui.view">
+        <field name="name">gantt.mom.search</field>
+        <field name="model">gantt.mom</field>
+        <field name="arch" type="xml">
+            <search string="Search MOM">
+                <field name="subject"/>
+                <field name="project_id"/>
+<!--                <filter string="This Month" name="this_month"-->
+<!--                        domain="[('date','&gt;=', (context_today()).strftime('%Y-%m-01'))]"/>-->
+                <group string="Group By">
+                    <filter string="Project" name="by_project"
+                            context="{'group_by': 'project_id'}"/>
+<!--                    <filter string="Month" name="by_month"-->
+<!--                            context="{'group_by': 'date:month'}"/>-->
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ══ ACTIONS ════════════════════════════════════════════════════ -->
+
+    <!-- Master MOM action (all projects) -->
+    <record id="action_gantt_mom_master" model="ir.actions.act_window">
+        <field name="name">Minutes of Meeting</field>
+        <field name="res_model">gantt.mom</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_gantt_mom_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No MOM records yet!
+            </p>
+            <p>Create your first Minutes of Meeting record.</p>
+        </field>
+    </record>
+
+    <!-- ══ MENUS ══════════════════════════════════════════════════════ -->
+
+    <!-- MOM Master under main menu -->
+    <menuitem
+        id="menu_gantt_mom_master"
+        name="Minutes of Meeting"
+        parent="menu_gantt_root"
+        action="action_gantt_mom_master"
+        sequence="15"/>
+
+    <!-- MOM under Configuration too -->
+    <menuitem
+        id="menu_gantt_mom_config"
+        name="MOM Master"
+        parent="menu_gantt_config"
+        action="action_gantt_mom_master"
+        sequence="30"/>
+
+</odoo>
