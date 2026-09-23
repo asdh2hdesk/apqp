@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit the timeline chart form to add the Flowchart button -->
+        <record id="apqp_timeline_chart_form_inherit_flowchart" model="ir.ui.view">
+            <field name="name">apqp.timeline.chart.form.flowchart.button</field>
+            <field name="model">apqp.timeline.chart</field>
+            <field name="inherit_id" ref="apqp.apqp_timeline_chart_form"/>
+            <field name="arch" type="xml">
+                <!-- Insert Flowchart button right after the MOM Report button -->
+                <xpath expr="//header" position="inside">
+                    <button
+                        name="action_open_flowchart"
+                        string="Flow Chart"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-sitemap"
+                        title="Open APQP Project Flow Dashboard"
+                    />
+                </xpath>
+            </field>
+        </record>
+        <!-- Fallback: if the MOM Report button has a different name,
+             use the header xpath instead -->
+        <!-- NOTE: Uncomment below and comment above if the button name differs -->
+        <!--
+        <record id="apqp_timeline_chart_form_inherit_flowchart_fallback" model="ir.ui.view">
+            <field name="name">apqp.timeline.chart.form.flowchart.button.fallback</field>
+            <field name="model">apqp.timeline.chart</field>
+            <field name="inherit_id" ref="apqp.apqp_timeline_chart_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button
+                        name="action_open_flowchart"
+                        string="Flow Chart"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-sitemap"
+                        title="Open APQP Project Flow Dashboard"
+                    />
+                </xpath>
+            </field>
+        </record>
+        -->
+
+    </data>
+</odoo>

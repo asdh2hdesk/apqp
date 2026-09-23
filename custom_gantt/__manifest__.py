@@ -10,8 +10,8 @@
         'security/ir.model.access.csv',
         'data/mom_access.xml',
         'views/gantt_task_views.xml',
-        'views/gantt_mom_views.xml',
         'views/gantt_task_menus.xml',
+        'views/gantt_mom_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

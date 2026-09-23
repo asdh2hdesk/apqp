@@ -5,18 +5,26 @@
         <field name="name">apqp.timeline.attachment.tree</field>
         <field name="model">apqp.timeline.attachment</field>
         <field name="arch" type="xml">
-            <tree string="APQP Timeline Attachments" decoration-success="state=='completed'" decoration-warning="state=='delayed'" decoration-info="state=='in_progress'">
+            <list string="APQP Timeline Attachments" decoration-success="state=='completed'" decoration-warning="state=='delayed'" decoration-info="state=='in_progress'" editable="bottom">
                 <field name="sequence" widget="handle"/>
-                <field name="timeline_chart_id"/>
+                <field name="timeline_chart_id" optional="hide"/>
                 <field name="format_name"/>
+                <field name="activity" required="1"/>
                 <field name="phase_id"/>
+                <field name="document_type" required="1"/>
+                <field name="input_field" optional="show"/>
+                <field name="output_field" optional="show"/>
+                <field name="department_ids" widget="many2many_tags" optional="show"/>
+                <field name="prepared_by" readonly="1"/>
+                <field name="approved_by" readonly="1"/>
                 <field name="planned_start_date"/>
                 <field name="planned_end_date"/>
-                <field name="actual_start_date"/>
-                <field name="actual_end_date"/>
-                <field name="state"/>
-                <field name="attachment_count"/>
-            </tree>
+                <field name="actual_start_date" readonly="1"/>
+                <field name="actual_end_date" readonly="1"/>
+                <field name="state" readonly="1"/>
+                <field name="attachment_count" readonly="1"/>
+                <button name="action_open_form" string="View" type="object" class="btn-primary" icon="fa-external-link"/>
+            </list>
         </field>
     </record>
 
@@ -26,19 +34,34 @@
         <field name="model">apqp.timeline.attachment</field>
         <field name="arch" type="xml">
             <form string="APQP Timeline Attachment">
+                <header>
+                    <button name="action_mark_prepared" string="Mark as Prepared" type="object" class="btn-primary" 
+                            invisible="document_type != 'attachment' or prepared_by"/>
+                    <button name="action_mark_reviewed" string="Mark as Reviewed" type="object" class="btn-primary" 
+                            invisible="document_type != 'attachment' or not prepared_by or reviewed_by"/>
+                    <button name="action_confirm_document" string="Confirm Document" type="object" class="btn-warning" 
+                            invisible="document_type != 'confirmation' or is_confirmed"/>
+                    <button name="action_mark_approved" string="Approve Document" type="object" class="btn-success" 
+                            invisible="approved_by or (document_type == 'attachment' and not reviewed_by) or (document_type == 'confirmation' and not is_confirmed)"/>
+                    <button name="action_reset" string="Reset All" type="object" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,delayed"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" name="action_view_attachments" icon="fa-files-o">
+                        <button class="oe_stat_button" type="object" name="action_view_attachments" icon="fa-files-o" invisible="document_type != 'attachment'">
                             <field string="Attachments" name="attachment_count" widget="statinfo"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Completed" bg_color="bg-success" attrs="{'invisible': [('state', '!=', 'completed')]}"/>
-                    <widget name="web_ribbon" title="Delayed" bg_color="bg-warning" attrs="{'invisible': [('state', '!=', 'delayed')]}"/>
-                    <widget name="web_ribbon" title="In Progress" bg_color="bg-info" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                    <widget name="web_ribbon" title="Completed" bg_color="bg-success" invisible="state != 'completed'"/>
+                    <widget name="web_ribbon" title="Delayed" bg_color="bg-warning" invisible="state != 'delayed'"/>
+                    <widget name="web_ribbon" title="In Progress" bg_color="bg-info" invisible="state != 'in_progress'"/>
                     <div class="oe_title">
                         <h1>
                             <field name="format_name" placeholder="Format Name"/>
                         </h1>
+                        <h3>
+                            <field name="activity" placeholder="Activity" required="1"/>
+                        </h3>
                     </div>
                     <group>
                         <group>
@@ -48,10 +71,12 @@
                             <field name="state" readonly="1"/>
                         </group>
                         <group>
+                            <field name="document_type" required="1"/>
                             <field name="reference"/>
                             <field name="name" placeholder="Description"/>
                         </group>
                     </group>
+
                     <notebook>
                         <page string="Timeline Details">
                             <group>
@@ -60,14 +85,58 @@
                                     <field name="planned_end_date"/>
                                 </group>
                                 <group string="Actual Dates">
-                                    <field name="actual_start_date"/>
-                                    <field name="actual_end_date"/>
+                                    <field name="actual_start_date" readonly="1"/>
+                                    <field name="actual_end_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Task Specifications">
+                                <group>
+                                    <field name="input_field" options="{'no-attachment': True}"/>
+                                </group>
+                                <group>
+                                    <field name="output_field" options="{'no-attachment': True}"/>
+                                </group>
+                                <group>
+                                    <field name="department_ids" widget="many2many_tags"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Attachments">
+
+                        <page string="Confirmation" invisible="document_type != 'confirmation'">
+                            <group>
+                                <group>
+                                    <field name="is_confirmed" readonly="1"/>
+                                    <field name="confirmed_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <p class="text-muted" invisible="document_type == 'attachment'">
+                                <strong>Note:</strong> For Attachment type documents, confirmation is automatic when the first attachment is added.
+                            </p>
+                        </page>
+
+                        <page string="Approvals &amp; Tracking">
+                            <group>
+                                <group string="Preparation">
+                                    <field name="prepared_by" readonly="1"/>
+                                    <field name="prepared_date" readonly="1"/>
+                                </group>
+                                <group string="Review">
+                                    <field name="reviewed_by"/>
+                                    <field name="reviewed_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Approval">
+                                    <field name="approved_by" readonly="1"/>
+                                    <field name="approved_date" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Attachments" invisible="document_type != 'attachment'">
                             <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
                         </page>
+
                         <page string="Notes">
                             <field name="notes" nolabel="1" placeholder="Add any additional notes here..."/>
                         </page>
@@ -87,18 +156,27 @@
                 <field name="timeline_chart_id"/>
                 <field name="phase_id"/>
                 <field name="reference"/>
-                <!-- <field name="attachment_count"/> -->
+                <field name="prepared_by"/>
+                <field name="approved_by"/>
                 <filter string="Not Started" name="not_started" domain="[('state', '=', 'not_started')]"/>
                 <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
                 <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
                 <filter string="Delayed" name="delayed" domain="[('state', '=', 'delayed')]"/>
                 <separator/>
-                <!-- <filter string="Has Attachments" name="has_attachments" domain="[('attachment_count', '>', 0)]"/>
-                <filter string="No Attachments" name="no_attachments" domain="[('attachment_count', '=', 0)]"/> -->
+                <filter string="Confirmation Type" name="confirmation_type" domain="[('document_type', '=', 'confirmation')]"/>
+                <filter string="Attachment Type" name="attachment_type" domain="[('document_type', '=', 'attachment')]"/>
+                <separator/>
+                <filter string="Prepared" name="prepared" domain="[('prepared_by', '!=', False)]"/>
+                <filter string="Not Prepared" name="not_prepared" domain="[('prepared_by', '=', False)]"/>
+                <filter string="Approved" name="approved" domain="[('approved_by', '!=', False)]"/>
+                <filter string="Not Approved" name="not_approved" domain="[('approved_by', '=', False)]"/>
+                <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Timeline Chart" name="group_timeline_chart" context="{'group_by': 'timeline_chart_id'}"/>
                     <filter string="Phase" name="group_phase" context="{'group_by': 'phase_id'}"/>
                     <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Document Type" name="group_doc_type" context="{'group_by': 'document_type'}"/>
+                    <filter string="Prepared By" name="group_prepared_by" context="{'group_by': 'prepared_by'}"/>
                 </group>
             </search>
         </field>
@@ -108,7 +186,7 @@
     <record id="action_apqp_timeline_attachment" model="ir.actions.act_window">
         <field name="name">APQP Timeline Attachments</field>
         <field name="res_model">apqp.timeline.attachment</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_apqp_timeline_attachment_search"/>
         <field name="context">{'search_default_group_timeline_chart': 1}</field>
         <field name="help" type="html">
@@ -116,15 +194,32 @@
                 Create your first APQP Timeline Attachment
             </p>
             <p>
-                Manage attachments for different phases of APQP Timeline Charts.
+                Manage attachments for different phases of APQP Timeline Charts with approval workflow tracking.
             </p>
         </field>
     </record>
 
     <!-- Menu Item -->
-    <menuitem id="menu_apqp_timeline_attachment" 
+    <menuitem id="menu_apqp_timeline_attachment"
               name="Timeline Attachments"
-              parent="apqp.menu_apqp_configuration" 
+              parent="apqp.menu_apqp_configuration"
               action="action_apqp_timeline_attachment"
               sequence="40"/>
+
+    <!-- Confirmation Dialog Form -->
+    <record id="view_apqp_confirm_dialog_form" model="ir.ui.view">
+        <field name="name">apqp.confirm.dialog.form</field>
+        <field name="model">apqp.confirm.dialog</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Document">
+                <group>
+                    <field name="format_name" readonly="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Yes, Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>

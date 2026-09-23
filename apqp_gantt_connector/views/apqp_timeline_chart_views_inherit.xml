@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="apqp_timeline_chart_form_inherit_gantt" model="ir.ui.view">
+        <field name="name">apqp.timeline.chart.form.inherit.gantt</field>
+        <field name="model">apqp.timeline.chart</field>
+        <field name="inherit_id" ref="apqp.apqp_timeline_chart_form"/>
+        <field name="arch" type="xml">
+            <!-- Add buttons to header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_create_sync_gantt" string="Sync/Add Gantt" type="object" class="btn-info" icon="fa-refresh"/>
+                <button name="action_open_gantt_view" string="Gantt Chart" type="object" class="oe_highlight" icon="fa-tasks" invisible="not gantt_project_id"/>
+                <button name="action_print_mom_report"
+                        string="MOM Report"
+                        type="object"
+                        class="btn-success"
+                        icon="fa-file-excel-o"
+                        invisible="not gantt_project_id"/>
+            </xpath>
+            
+            <!-- Hide existing refresh if redundant, or keep both? 
+                 The request mentions a "Refresh" button should be available to update the timeline.
+                 Our Sync/Add Gantt also refreshes. -->
+                 
+            <!-- Add gantt_project_id to the form (maybe invisible) -->
+            <xpath expr="//field[@name='doc_type']" position="before">
+                <field name="gantt_project_id" readonly="1" invisible="1"/>
+            </xpath>
+
+            <!-- Hide original MOM page and add Gantt MOM page -->
+            <xpath expr="//page[@name='mom_format']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Disable section_and_note widget to allow buttons on sections -->
+            <xpath expr="//field[@name='timeline_format_ids']" position="attributes">
+                <attribute name="widget">one2many</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='mom_format']" position="after">
+                <page name="gantt_mom" string="MOM" invisible="not gantt_project_id">
+                    <field name="gantt_mom_ids" context="{'default_project_id': gantt_project_id}">
+                        <list create="false">
+                            <field name="subject"/>
+                            <field name="project_name" optional="show"/>
+                            <field name="champion_id" widget="many2one_avatar_user"/>
+                            <field name="create_date" string="Created On" widget="date"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+            <!-- Add buttons to Timeline Format list -->
+            <xpath expr="//field[@name='timeline_format_ids']/list/field[@name='name']" position="before">
+                <field name="is_gate_review" column_invisible="1"/>
+                <button name="action_open_phase_mom" type="object" icon="fa-file-text-o" string="MOM"
+                        invisible="not is_gate_review"
+                        class="btn-sm btn-link text-primary"/>
+                <button name="action_show_phase_remarks" type="object" icon="fa-comments-o" string="Remarks"
+                        invisible="not is_gate_review"
+                        class="btn-sm btn-link text-info"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

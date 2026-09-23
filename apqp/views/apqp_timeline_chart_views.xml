@@ -6,19 +6,21 @@
             <field name="name">apqp.timeline.chart.tree</field>
             <field name="model">apqp.timeline.chart</field>
             <field name="arch" type="xml">
-                <tree string="APQP Timeline Charts">
+                <list string="APQP Timeline Charts">
                     <field name="project_name"/>
                     <field name="partner_id"/>
-                    <field name="used_in_project_type_id"/>
+                    <field name="used_in_project_type_id" invisible="1"/>
                     <field name="doc_type"/>
                     <field name="start_date"/>
                     <field name="target_date"/>
                     <field name="progress" widget="progressbar"/>
-                    <field name="state" widget="badge" decoration-success="state == 'completed'" decoration-warning="state == 'in_progress'" decoration-info="state == 'draft'"/>
-                </tree>
+                    <field name="state" widget='badge' decoration-info="state == 'draft'"
+                           decoration-warning="state == 'in_progress'" decoration-success="state == 'completed'"
+                           decoration-danger="state == 'cancelled'"/>
+                </list>
             </field>
         </record>
-        
+
         <!-- Form View -->
         <record id="apqp_timeline_chart_form" model="ir.ui.view">
             <field name="name">apqp.timeline.chart.form</field>
@@ -26,10 +28,57 @@
             <field name="arch" type="xml">
                 <form string="APQP Timeline Chart">
                     <header>
+                        <button name="refresh_data_from_package" string="Sync from Doc Approval" type="object" class="oe_highlight" icon="fa-refresh"/>
                         <!-- <button name="action_view_timeline_chart" string="View Timeline Chart" type="object" class="oe_highlight" icon="fa-line-chart"/> -->
-                        <button name="action_view_timeline_overview" string="Timeline Overview" type="object" class="btn-secondary" icon="fa-table"/>
+                        <!-- <button name="action_view_timeline_overview" string="Timeline Overview" type="object" class="btn-secondary" icon="fa-table"/> -->
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
                     </header>
+                        <style>
+                            /* Section rows */
+                            .timeline_format_line_list tr.text-primary,
+                            .timeline_format_line_list tr.table-primary,
+                            .timeline_format_line_list .o_data_row.text-primary,
+                            .timeline_format_line_list .o_data_row.table-primary,
+                            .timeline_format_line_list tr.text-primary td,
+                            .timeline_format_line_list tr.table-primary td,
+                            .timeline_format_line_list .o_data_row.text-primary td,
+                            .timeline_format_line_list .o_data_row.table-primary td {
+                                background-color: #1f4e79 !important;
+                                color: white !important;
+                                font-weight: bold !important;
+                            }
+
+                            /* Format rows */
+                            .timeline_format_line_list tr.text-warning,
+                            .timeline_format_line_list tr.table-warning,
+                            .timeline_format_line_list .o_data_row.text-warning,
+                            .timeline_format_line_list .o_data_row.table-warning,
+                            .timeline_format_line_list tr.text-warning td,
+                            .timeline_format_line_list tr.table-warning td,
+                            .timeline_format_line_list .o_data_row.text-warning td,
+                            .timeline_format_line_list .o_data_row.table-warning td {
+                                background-color: #fff2cc !important;
+                                color: black !important;
+                                font-weight: bold !important;
+                            }
+
+                            .timeline_format_line_list tr.text-info td,
+                            .timeline_format_line_list .o_data_row.text-info td,
+                            .timeline_format_line_list tr.table-info td,
+                            .timeline_format_line_list .o_data_row.table-info td {
+                                background-color: #d9d9d9 !important;
+                                color: black !important;
+                                font-weight: bold !important;
+                            }
+
+                            .timeline_format_line_list tr.text-success td,
+                            .timeline_format_line_list .o_data_row.text-success td,
+                            .timeline_format_line_list tr.table-success td,
+                            .timeline_format_line_list .o_data_row.table-success td {
+                                color: black !important;
+                                font-weight: bold !important;
+                            }
+                        </style>
                     <sheet>
                         <div class="oe_title">
                             <label for="name"/>
@@ -39,17 +88,24 @@
                         </div>
                         <group>
                             <group>
-                                <field name="project_name"/>
-                                <field name="partner_id"/>
-                                <field name="used_in_project_type_id"/>
-                                <field name="start_date"/>
-                                <field name="target_date"/>
-                                <field name="project_start_date"/>
-                                <field name="project_end_date"/>
-                                <field name="progress" widget="progressbar"/>
+                                <field name="document_package_id" readonly="1"/>
+                                <field name="project_name" readonly="1"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="used_in_project_type_id" invisible="1"/>
+                                <field name="start_date" readonly="1"/>
+                                <field name="target_date" readonly="1"/>
+                                <field name="project_start_date" string="Actual Start Date" readonly="1"/>
+                                <field name="project_end_date" string="Actual End Date" readonly="1"/>
+                                <field name="cft_team" widget="many2many_tags"/>
+                                <label for="progress"/>
+                                <div class="o_row">
+                                    <field name="progress" widget="progressbar" nolabel="1"/>
+                                    <button name="action_refresh_timeline" string="Refresh Timeline" type="object"
+                                            class="btn-link" icon="fa-refresh"/>
+                                </div>
                             </group>
                             <group>
-                                <field name="doc_type"/>
+                                <field name="doc_type" readonly="1"/>
                                 <field name="part_id"/>
                                 <field name="part_name"/>
                                 <field name="part_number"/>
@@ -60,50 +116,96 @@
                         <notebook>
                             <page name="timeline_formats" string="Timeline Formats">
                                 <field name="timeline_format_ids" widget="section_and_note_one2many">
-                                    <tree editable="bottom" decoration-info="display_type == 'line_section'">
+                                    <list editable="bottom" delete="false" class="timeline_format_line_list"
+                                          decoration-primary="display_type == 'line_section'"
+                                          decoration-info="document_type == 'attachment'"
+                                          decoration-warning="document_type == 'format'"
+                                          decoration-success="document_type == 'confirmation'"
+                                          decoration-bf="display_type == 'line_section' or document_type == 'format'"
+                                          limit="1000">
                                         <!-- Control buttons with specific contexts -->
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>
-                                            <create name="add_section_control" string="Add a section" 
+                                            <create name="add_section_control" string="Add a section"
                                                     context="{'default_display_type': 'line_section', 'default_name': 'New Phase Section'}"/>
-                                            <create name="add_note_control" string="Add a note" 
+                                            <create name="add_note_control" string="Add a note"
                                                     context="{'default_display_type': 'line_note', 'default_name': 'Note'}"/>
                                         </control>
-                                        <field name="display_type" invisible="1"/>
+                                        <field name="display_type" optional="hide"/>
                                         <field name="sequence" widget="handle"/>
-                                        <field name="name" attrs="{'required': [('display_type', '=', False)]}"/>
-                                        <field name="phase_id" attrs="{'invisible': [('display_type', '=', 'line_section')], 'required': [('display_type', '=', False)]}" optional="show"/>
-                                        <field name="reference" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                                        <field name="planned_start_date" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                                        <field name="planned_end_date" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                                        <field name="actual_start_date" readonly="1" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                                        <field name="actual_end_date" readonly="1" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                                        <field name="status" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                                    </tree>
+                                        <field name="name" required="not display_type"/>
+                                        <field name="activity" invisible="display_type in ['line_section', 'line_note']" required="not display_type" optional="show"/>
+                                        <field name="parent_activity_id"
+                                               invisible="display_type in ['line_section', 'line_note']"
+                                               optional="show"
+                                               options="{'no_create': True, 'no_open': True}"/>
+                                        <field name="document_type" invisible="display_type in ['line_section', 'line_note']" required="not display_type" optional="show"/>
+                                        <field name="phase_id" invisible="display_type == 'line_section'"
+                                               required="not display_type" optional="show"/>
+                                        <field name="reference"
+                                               invisible="display_type in ['line_section', 'line_note']"/>
+                                        <field name="planned_start_date"
+                                               invisible="display_type in ['line_section', 'line_note']"/>
+                                        <field name="planned_end_date"
+                                               invisible="display_type in ['line_section', 'line_note']"/>
+                                        <field name="planned_duration" readonly="1"
+                                               invisible="display_type in ['line_section', 'line_note']"
+                                               optional="show"/>
+                                        <field name="actual_start_date" readonly="1"
+                                               invisible="display_type in ['line_section', 'line_note']"/>
+                                        <field name="actual_end_date" readonly="1"
+                                               invisible="display_type in ['line_section', 'line_note']"/>
+                                        <field name="actual_duration" readonly="1"
+                                               invisible="display_type in ['line_section', 'line_note']"
+                                               optional="show"/>
+                                        <field name="status" invisible="display_type in ['line_section', 'line_note']"/>
+                                        <field name="department_ids" widget="many2many_tags" invisible="display_type in ['line_section', 'line_note']" optional="hide"/>
+                                        <button name="action_insert_below"
+                                                string=""
+                                                type="object"
+                                                icon="fa-plus-circle"
+                                                title="Insert row below"
+                                                invisible="display_type in ['line_section', 'line_note']"
+                                                class="btn-sm"/>
+
+                                        <button name="action_open_form"
+                                                string="View"
+                                                type="object"
+                                                class="btn-primary"
+                                                icon="fa-external-link"
+                                                invisible="display_type in ['line_section', 'line_note'] or is_gate_review"/>
+
+                                        <field name="include_in_report"
+                                               widget="boolean_toggle"
+                                               string="In Report"
+                                               invisible="display_type in ['line_section', 'line_note']"/>
+                                    </list>
                                 </field>
                             </page>
                             <page name="additional_attachments" string="Additional Attachments">
                                 <field name="attachment_ids">
-                                    <tree editable="bottom">
+                                    <list editable="bottom">
                                         <field name="sequence" widget="handle"/>
+                                        <field name="timeline_chart_id" optional="hide"/>
                                         <field name="format_name"/>
+                                        <field name="activity"/>
                                         <field name="phase_id"/>
-                                        <field name="reference"/>
-                                        <field name="planned_start_date"/>
-                                        <field name="planned_end_date"/>
-                                        <field name="actual_start_date"/>
-                                        <field name="actual_end_date"/>
-                                        <field name="attachment_ids" widget="many2many_binary"/>
-                                        <field name="state"/>
-                                        <field name="attachment_count" invisible="1"/>
-                                    </tree>
+                                        <field name="document_type" required="1"/>
+                                        <field name="input_field"/>
+                                        <field name="output_field"/>
+                                        <field name="department_ids" widget="many2many_tags"/>
+                                        <field name="prepared_by" readonly="1" optional="hide"/>
+                                        <field name="approved_by" readonly="1" optional="hide"/>
+                                        <field name="planned_start_date" optional="hide"/>
+                                        <field name="planned_end_date" optional="hide"/>
+                                        <field name="actual_start_date" readonly="1" optional="hide"/>
+                                        <field name="actual_end_date" readonly="1" optional="hide"/>
+                                        <field name="state" readonly="1"/>
+                                        <field name="attachment_count" readonly="1" optional="hide"/>
+                                        <button name="action_open_form" string="View" type="object" class="btn-primary"
+                                                icon="fa-external-link"/>
+                                    </list>
                                 </field>
-                            </page>
-                            <page name="timeline_overview" string="Timeline Overview">
-                                <div>
-                                    <button name="action_refresh_timeline" string="Refresh Timeline" type="object" class="btn-secondary mb-3" icon="fa-refresh"/>
-                                </div>
-                                <field name="timeline_html" widget="html" options="{'safe': True}"/>
                             </page>
                             <page name="mom_format" string="MOM Format">
                                 <group>
@@ -112,14 +214,14 @@
                                         <field name="attendee_ids" widget="many2many_tags_avatar"/>
                                     </group>
                                 </group>
-                                <field name="mom_format_ids" mode="tree" context="{'default_timeline_chart_id': id, 'timeline_chart_id': id}">
-                                    <tree string="MOM Format" 
-                                          decoration-success="state=='approved'" 
-                                          decoration-info="state=='completed'" 
-                                          decoration-warning="state=='in_progress'" 
+                                <field name="mom_format_ids" mode="list"
+                                       context="{'default_timeline_chart_id': id, 'timeline_chart_id': id}">
+                                    <list string="MOM Format"
+                                          decoration-success="state=='approved'"
+                                          decoration-info="state=='completed'"
+                                          decoration-warning="state=='in_progress'"
                                           decoration-danger="state=='cancelled'"
-                                          editable="bottom"
-                                          >
+                                    >
                                         <field name="sequence" widget="handle"/>
                                         <field name="serial_no" force_save="1"/>
                                         <!-- <field name="open_point_id" options="{'no_quick_create': True}"/> -->
@@ -128,55 +230,52 @@
                                         <field name="target_date"/>
                                         <field name="actual_completion_date"/>
                                         <field name="remarks"/>
-                                        <field name="create_date" readonly="1" widget="date"  optional="show"/>
+                                        <field name="create_date" readonly="1" widget="date" optional="show"/>
                                         <field name="attendee_ids" widget="many2many_tags" optional="hide"/>
-                                        <field name="conducted_by_id" widget="many2one_avatar_employee" optional="hide"/>
-                                        <!-- <field name="approve_date" readonly="1" optional="show" attrs="{'column_invisible': [('parent.state', '!=', 'approved')]}"/>
-                                        <field name="approved_by_id" readonly="1" optional="show" attrs="{'column_invisible': [('parent.state', '!=', 'approved')]}"/> -->
-                                        <field name="state" widget="badge" 
-                                            decoration-success="state=='approved'" 
-                                            decoration-info="state=='completed'" 
-                                            decoration-warning="state=='in_progress'" 
-                                            decoration-danger="state=='cancelled'"/>
-                                        <button name="action_complete" 
-                                        type="object" 
-                                        string="Complete" 
-                                        class="btn-sm btn-primary"
-                                        attrs="{'invisible': [('state', 'not in', ['draft', 'in_progress'])]}"
-                                        icon="fa-check"/>
-                                        <button name="action_approve" 
-                                        type="object" 
-                                        string="Approve" 
-                                        class="btn-sm btn-success"
-                                        attrs="{'invisible': [('state', '!=', 'completed')]}"
-                                        icon="fa-thumbs-up"/>
-                                        <button name="action_cancel" 
-                                        type="object" 
-                                        string="Cancel" 
-                                        class="btn-sm btn-danger"
-                                        attrs="{'invisible': [('state', 'in', ['approved', 'cancelled'])]}"
-                                        icon="fa-times"
-                                        confirm="Are you sure you want to cancel this record?"/>
-                                        <button name="action_reset_to_draft" 
-                                        type="object" 
-                                        string="Reset" 
-                                        class="btn-sm btn-warning"
-                                        attrs="{'invisible': [('state', 'in', ['draft'])]}"
-                                        icon="fa-undo"
-                                        confirm="Are you sure you want to reset this record to draft?"/>
-                                        <field name="approve_date" attrs="{'invisible': [('state', 'not in', 'approved')]}"/>
-                                        <field name="approved_by_id" attrs="{'invisible': [('state', 'not in', 'approved')]}" />
-                                    </tree>
+                                        <field name="conducted_by_id" widget="many2one_avatar_employee"
+                                               optional="hide"/>
+                                        <!-- <field name="approve_date" readonly="1" optional="show" column_invisible="parent.state != 'approved'"/>
+                                        <field name="approved_by_id" readonly="1" optional="show" column_invisible="parent.state != 'approved'"/> -->
+                                        <field name="state" widget="badge"
+                                               decoration-success="state=='approved'"
+                                               decoration-info="state=='completed'"
+                                               decoration-warning="state=='in_progress'"
+                                               decoration-danger="state=='cancelled'"/>
+                                        <button name="action_complete"
+                                                type="object"
+                                                string="Complete"
+                                                class="btn-sm btn-primary"
+                                                invisible="state not in ['draft', 'in_progress']"
+                                                icon="fa-check"/>
+                                        <button name="action_approve"
+                                                type="object"
+                                                string="Approve"
+                                                class="btn-sm btn-success"
+                                                invisible="state != 'completed'"
+                                                icon="fa-thumbs-up"/>
+                                        <button name="action_cancel"
+                                                type="object"
+                                                string="Cancel"
+                                                class="btn-sm btn-danger"
+                                                invisible="state in ['approved', 'cancelled']"
+                                                icon="fa-times"
+                                                confirm="Are you sure you want to cancel this record?"/>
+                                        <button name="action_reset_to_draft"
+                                                type="object"
+                                                string="Reset"
+                                                class="btn-sm btn-warning"
+                                                invisible="state in ['draft']"
+                                                icon="fa-undo"
+                                                confirm="Are you sure you want to reset this record to draft?"/>
+                                        <field name="approve_date" invisible="state not in 'approved'"/>
+                                        <field name="approved_by_id" invisible="state not in 'approved'"/>
+                                    </list>
                                 </field>
                             </page>
-                            
+
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -186,18 +285,22 @@
             <field name="name">apqp.timeline.format.tree</field>
             <field name="model">apqp.timeline.format</field>
             <field name="arch" type="xml">
-                <tree decoration-info="display_type == 'line_section'">
+                <list decoration-info="display_type == 'line_section'"
+                      decoration-success="document_type == 'format'"
+                      decoration-bf="document_type == 'format'">
                     <field name="display_type" invisible="1"/>
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="phase_id" attrs="{'invisible': [('display_type', '=', 'line_section')]}"/>
-                    <field name="planned_start_date" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                    <field name="planned_end_date" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                    <field name="actual_start_date" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                    <field name="actual_end_date" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                    <field name="reference" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                    <field name="status" attrs="{'invisible': [('display_type', 'in', ['line_section', 'line_note'])]}"/>
-                </tree>
+                    <field name="activity" invisible="display_type in ['line_section', 'line_note']" required="not display_type"/>
+                    <field name="document_type" invisible="display_type in ['line_section', 'line_note']" required="not display_type"/>
+                    <field name="phase_id" invisible="display_type == 'line_section'"/>
+                    <field name="planned_start_date" invisible="display_type in ['line_section', 'line_note']"/>
+                    <field name="planned_end_date" invisible="display_type in ['line_section', 'line_note']"/>
+                    <field name="actual_start_date" invisible="display_type in ['line_section', 'line_note']"/>
+                    <field name="actual_end_date" invisible="display_type in ['line_section', 'line_note']"/>
+                    <field name="reference" invisible="display_type in ['line_section', 'line_note']"/>
+                    <field name="status" invisible="display_type in ['line_section', 'line_note']"/>
+                </list>
             </field>
         </record>
 
@@ -213,6 +316,8 @@
                                 <field name="timeline_chart_id" invisible="1"/>
                                 <field name="phase_id"/>
                                 <field name="name"/>
+                                <field name="activity" required="1"/>
+                                <field name="document_type" required="1"/>
                                 <field name="format_id"/>
                                 <field name="document_approval_id"/>
                                 <field name="reference"/>
@@ -224,6 +329,15 @@
                                 <field name="actual_end_date"/>
                                 <field name="status"/>
                                 <field name="responsible_user_id"/>
+                                <field name="department_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <group string="Task Specifications">
+                            <group>
+                                <field name="input_field" options="{'no-attachment': True}"/>
+                            </group>
+                            <group>
+                                <field name="output_field" options="{'no-attachment': True}"/>
                             </group>
                         </group>
                         <group>
@@ -240,11 +354,12 @@
         <record model="ir.actions.act_window" id="action_apqp_timeline_chart">
             <field name="name">APQP Timeline Charts</field>
             <field name="res_model">apqp.timeline.chart</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
 
         <menuitem id="menu_apqp_root" name="APQP" sequence="1"/>
-        <menuitem id="menu_apqp_timeline" name="Timeline Charts" parent="menu_apqp_root" sequence="5" action="action_apqp_timeline_chart"/>
+        <menuitem id="menu_apqp_timeline" name="Timeline Charts" parent="menu_apqp_root" sequence="5"
+                  action="action_apqp_timeline_chart"/>
         <menuitem id="menu_apqp_configuration" name="Configuration" parent="menu_apqp_root" sequence="100"/>
 
     </data>

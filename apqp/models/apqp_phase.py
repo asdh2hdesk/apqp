@@ -12,11 +12,14 @@ class APQPPhase(models.Model):
     description = fields.Text(string='Description')
     color = fields.Integer(string='Color Index')
     active = fields.Boolean(string='Active', default=True)
+    default_duration_value = fields.Integer(string='Default Duration')
+    default_duration_unit = fields.Selection([
+        ('days', 'Days'),
+        ('weeks', 'Weeks')
+    ], string='Duration Unit', default='weeks')
+    gate_review_id = fields.Many2one('gate.review', string='Gate Review')
 
     @api.depends('name')
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for record in self:
-            name = record.name
-            res.append((record.id, name))
-        return res
+            record.display_name = record.name

@@ -1,0 +1,32 @@
+/* APQP Timeline Section Collapse Toggle Button */
+
+/* Toggle button on section header rows */
+.timeline_format_line_list tr .apqp-section-toggle-btn {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 0 6px 0 0 !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    transition: transform 0.15s ease !important;
+}
+
+.timeline_format_line_list tr .apqp-section-toggle-btn:hover {
+    opacity: 0.8 !important;
+}
+
+.timeline_format_line_list tr .apqp-section-toggle-btn i {
+    color: #ffffff !important;
+    font-size: 25px !important;
+}
+
+/* Ensure section rows have pointer cursor and look clickable */
+.timeline_format_line_list tr.o_is_section td:first-child,
+.timeline_format_line_list tr.table-primary td:first-child,
+.timeline_format_line_list tr.text-primary td:first-child {
+    cursor: default;
+}

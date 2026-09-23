@@ -4,16 +4,7 @@
     <menuitem
         id="menu_gantt_root"
         name="Gantt Planner"
-        sequence="90"
-        web_icon="custom_gantt,static/description/icon.png"/>
-
-    <!-- Tasks list/kanban/form -->
-<!--    <menuitem-->
-<!--        id="menu_gantt_tasks"-->
-<!--        name="Tasks"-->
-<!--        parent="menu_gantt_root"-->
-<!--        action="action_gantt_task"-->
-<!--        sequence="10"/>-->
+        sequence="90"/>
 
     <menuitem
         id="menu_gantt_projects"

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_apqp_project_phase_timeframe_tree" model="ir.ui.view">
+            <field name="name">apqp.project.phase.timeframe.tree</field>
+            <field name="model">apqp.project.phase.timeframe</field>
+            <field name="arch" type="xml">
+                <list string="Phase Timeframes" editable="bottom"  delete="false">
+                    <field name="sequence" widget="handle"/>
+                    <field name="phase_id" readonly="1"/>
+                    <field name="duration_value"/>
+                    <field name="duration_unit"/>
+                    <field name="planned_start_date"/>
+                    <field name="planned_end_date"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_apqp_project_phase_timeframe" model="ir.actions.act_window">
+            <field name="name">Project Phase Timeframes</field>
+            <field name="res_model">apqp.project.phase.timeframe</field>
+            <field name="view_mode">list</field>
+            <field name="target">new</field>
+            <field name="domain">[('document_package_id', '=', active_id)]</field>
+        </record>
+    </data>
+</odoo>

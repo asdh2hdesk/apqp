@@ -2,7 +2,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import timedelta
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class GanttTag(models.Model):
     _name = 'gantt.tag'
@@ -155,13 +156,11 @@ class GanttTask(models.Model):
     # Planned dates (used by Gantt bars)
     date_start = fields.Datetime(
         string='Planned Start',
-        required=True,
         default=fields.Datetime.now,
         tracking=True,
     )
     date_stop = fields.Datetime(
         string='Planned End',
-        required=True,
         default=lambda self: fields.Datetime.now() + timedelta(days=1),
         tracking=True,
     )

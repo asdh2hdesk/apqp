@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view: add Flow Chart button to header -->
+    <record id="view_document_package_form_apqp_inherit" model="ir.ui.view">
+        <field name="name">xf.doc.approval.document.package.form.apqp.inherit</field>
+        <field name="model">xf.doc.approval.document.package</field>
+        <field name="inherit_id" ref="xf_doc_approval.xf_doc_approval_document_package_form"/>
+        <field name="arch" type="xml">
+            <field name="state" widget="statusbar" position="before">
+                <button string="Flow Chart" name="action_open_flowchart" type="object"
+                        invisible="not apqp_timeline_chart_id"
+                        class="btn-secondary"
+                        icon="fa-sitemap"/>
+            </field>
+        </field>
+    </record>
+    <!-- List view: add Flow Chart button column -->
+    <record id="view_document_package_list_apqp_inherit" model="ir.ui.view">
+        <field name="name">xf.doc.approval.document.package.list.apqp.inherit</field>
+        <field name="model">xf.doc.approval.document.package</field>
+        <field name="inherit_id" ref="xf_doc_approval.xf_doc_approval_document_package_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="apqp_timeline_chart_id" column_invisible="1"/>
+                <button string="Flow Chart" name="action_open_flowchart" type="object"
+                        icon="fa-sitemap"
+                        invisible="not apqp_timeline_chart_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -7,6 +7,11 @@ class DocumentApprovalInherit(models.Model):
 
     phase_id = fields.Many2one('apqp.phase', string='Phase')
     
+    # Redefine fields to add state-based readonly if necessary, or do it in XML.
+    # The requirement says "once the project is created no more plan date should be changed".
+    # Usually "created" means it exists, but in Odoo context it often means when it starts moving from Draft.
+
+    
     @api.onchange('formate')
     def _onchange_formate_phase(self):
         """Inherit phase from format when format is selected"""

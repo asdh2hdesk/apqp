@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="xf_doc_approval.formate_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='department_ids']" position="after">
-                    <field name="phase_id" placeholder="Phase"/>
+                    <field name="phase_id" placeholder="Phase" width="180px"/>
                 </xpath>
             </field>
         </record>

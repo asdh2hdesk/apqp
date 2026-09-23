@@ -1,0 +1,1047 @@
+/* ============================================================
+   APQP Flowchart Dashboard - Full Screen Styles
+   ============================================================ */
+.o_action_manager {
+    overflow-y: auto !important;
+}
+.apqp-flowchart-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: url('/flow_chart/static/src/img/luxa.org-opacity-changed-._dashboard_bg.png') no-repeat center center fixed;
+    background-size: cover;
+    color: var(--pd-text);
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ── Header ── */
+.apqp-fc-header {
+    padding: 18px 32px 14px;
+    background: rgb(255 255 255 / 24%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(252, 252, 252, 0.20);
+    box-shadow: 2px 3px 10px rgb(0 0 0 / 26%);
+}
+
+/* Row background colors based on status */
+.doc-row-completed   { background-color: #dcfce7; }   /* light green  */
+.doc-row-in_progress { background-color: #fef3c7; }   /* light orange */
+.doc-row-not_started { background-color: #f1f5f9; }   /* light gray   */
+.doc-row-delayed     { background-color: #fee2e2; }   /* light red    */
+.doc-row-draft       { background-color: #e0f2fe; }   /* light blue   */
+
+.apqp-fc-header h1 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+.apqp-fc-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    font-size: 0.82rem;
+    color: #555;
+    flex-wrap: wrap;
+}
+
+.apqp-fc-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.apqp-fc-meta .meta-label {
+    color: #888;
+}
+
+.apqp-fc-meta .meta-value {
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.apqp-fc-progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.apqp-fc-overall-progress {
+    display: inline-block;
+    width: 120px;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.apqp-fc-overall-progress .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    border-radius: 99px;
+    transition: width 0.6s ease;
+}
+
+.apqp-fc-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    background: rgba(0,0,0,0.06);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: background 0.2s, color 0.2s;
+}
+
+.apqp-fc-close-btn:hover {
+    background: rgba(220,38,38,0.12);
+    color: #dc2626;
+}
+
+/* ── Phase count indicator row ── */
+.apqp-fc-phases-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 32px;
+    background: rgba(255,255,255,0.6);
+    font-size: 0.78rem;
+    color: #666;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    flex-shrink: 0;
+}
+
+/* ── Columns container ── */
+.apqp-fc-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    padding: 0;
+    max-height: calc(100vh - 160px);
+}
+
+.apqp-fc-columns {
+    display: flex;
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 16px;
+    gap: 14px;
+    align-items: stretch;
+}
+
+.apqp-fc-columns::-webkit-scrollbar {
+    height: 6px;
+}
+.apqp-fc-columns::-webkit-scrollbar-track { background: transparent; }
+.apqp-fc-columns::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+    border-radius: 99px;
+}
+
+/* ── Individual Phase Card ── */
+.apqp-fc-phase {
+    min-width: 210px;
+    max-width: 340px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,0.92);
+    border-radius: 18px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    cursor: pointer;
+    max-height: calc(100vh - 320px);
+}
+
+.apqp-fc-phase:hover {
+    box-shadow: 0 6px 28px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.06);
+}
+
+/* Phase header strip */
+.apqp-fc-phase-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.apqp-fc-phase-icon-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.apqp-fc-phase-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.apqp-fc-phase-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.apqp-fc-phase-doc-count {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+}
+
+/* State summary rows */
+.apqp-fc-state-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.apqp-fc-state-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    padding: 2px 0;
+}
+
+.apqp-fc-state-row .state-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.apqp-fc-state-row .state-label {
+    display: flex;
+    align-items: center;
+    color: #555;
+    flex: 1;
+}
+
+.apqp-fc-state-row .state-count {
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.dot-completed    { background: #22c55e; }
+.dot-in_progress  { background: #f59e0b; }
+.dot-not_started  { background: #94a3b8; }
+.dot-delayed      { background: #ef4444; }
+
+/* Document list */
+.apqp-fc-doc-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.apqp-fc-doc-list::-webkit-scrollbar { width: 4px; }
+.apqp-fc-doc-list::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.12);
+    border-radius: 99px;
+}
+
+.apqp-fc-doc-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    border-radius: 8px;
+    font-size: 0.73rem;
+    color: #333;
+    background: rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: background 0.15s;
+    gap: 6px;
+}
+
+.apqp-fc-doc-item:hover {
+    background: rgba(99,102,241,0.06);
+}
+
+.apqp-fc-doc-clickable {
+    cursor: pointer;
+}
+
+.apqp-fc-doc-clickable:hover {
+    background: rgba(99,102,241,0.10);
+    border-color: rgba(99,102,241,0.25);
+    color: #4f46e5;
+}
+
+.apqp-fc-doc-clickable:hover .doc-name {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+.apqp-fc-more-docs {
+    text-align: center;
+    color: #6366f1;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 5px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px dashed rgba(99,102,241,0.35);
+    background: rgba(99,102,241,0.04);
+    transition: background 0.15s;
+    margin-top: 2px;
+    user-select: none;
+}
+
+.apqp-fc-more-docs:hover {
+    background: rgba(99,102,241,0.12);
+}
+
+.apqp-fc-collapse {
+    color: #888;
+    border-color: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,0.02);
+}
+
+.doc-type-legend {
+    font-size: 0.75rem;
+    margin-right: 4px;
+    flex-shrink: 0;
+    cursor: default;
+}
+
+.apqp-fc-doc-item .doc-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+/* Doc name color based on status */
+.doc-row-completed   .doc-name { color: #15803d; font-weight: 600; }  /* green  */
+.doc-row-in_progress .doc-name { color: #b45309; font-weight: 600; }  /* orange */
+.doc-row-not_started .doc-name { color: #64748b; font-weight: 600; }  /* gray   */
+.doc-row-delayed     .doc-name { color: #dc2626; font-weight: 600; }  /* red    */
+.doc-row-draft       .doc-name { color: #0369a1; font-weight: 600; }  /* blue   */
+
+.apqp-fc-doc-item .doc-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.apqp-fc-doc-item .doc-date {
+    font-size: 0.68rem;
+    color: #888;
+}
+
+/* State badges on docs */
+.apqp-badge {
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 99px;
+    white-space: nowrap;
+    text-transform: capitalize;
+}
+
+.apqp-badge-completed    { background: #dcfce7; color: #15803d; }
+.apqp-badge-in_progress  { background: #fef3c7; color: #b45309; }
+.apqp-badge-not_started  { background: #f1f5f9; color: #64748b; }
+.apqp-badge-delayed      { background: #fee2e2; color: #dc2626; }
+.apqp-badge-draft        { background: #e0f2fe; color: #0369a1; }
+
+/* Phase footer */
+.apqp-fc-phase-footer {
+    padding: 10px 16px 12px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.apqp-fc-view-btn {
+    width: 100%;
+    padding: 6px 0;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.73rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+}
+
+.apqp-fc-view-btn:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+.apqp-fc-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.apqp-fc-phase-progress-bar {
+    flex: 1;
+    height: 5px;
+    background: #e5e7eb;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.apqp-fc-phase-progress-bar .phase-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.7s ease;
+}
+
+.apqp-fc-progress-pct {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #555;
+    min-width: 28px;
+    text-align: right;
+}
+
+/* Phase color themes */
+.phase-theme-0 { --ph-color: #7c3aed; --ph-bg: #ede9fe; --ph-header: #7c3aed; }
+.phase-theme-1 { --ph-color: #0d9488; --ph-bg: #ccfbf1; --ph-header: #0d9488; }
+.phase-theme-2 { --ph-color: #059669; --ph-bg: #d1fae5; --ph-header: #059669; }
+.phase-theme-3 { --ph-color: #d97706; --ph-bg: #fef3c7; --ph-header: #d97706; }
+.phase-theme-4 { --ph-color: #2563eb; --ph-bg: #dbeafe; --ph-header: #2563eb; }
+.phase-theme-5 { --ph-color: #db2777; --ph-bg: #fce7f3; --ph-header: #db2777; }
+.phase-theme-6 { --ph-color: #7c3aed; --ph-bg: #ede9fe; --ph-header: #7c3aed; }
+.phase-theme-7 { --ph-color: #0d9488; --ph-bg: #ccfbf1; --ph-header: #0d9488; }
+
+.apqp-fc-phase-icon { background: rgba(255, 255, 255, 0.25); color: #ffffff; }
+.apqp-fc-view-btn   { background: var(--ph-color, #6366f1); color: #fff; }
+.phase-bar-fill     { background: var(--ph-color, #6366f1); }
+.apqp-fc-phase-header {
+    border-top: none;
+    background: var(--ph-header);
+    padding: 14px 16px 12px;
+}
+
+/* ── Loading/Error states ── */
+.apqp-fc-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    flex-direction: column;
+    gap: 12px;
+    color: #888;
+}
+
+.apqp-fc-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e0e0e0;
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: apqp-spin 0.8s linear infinite;
+}
+
+@keyframes apqp-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .apqp-fc-columns {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    .apqp-fc-phase {
+        min-width: 170px;
+    }
+    .apqp-fc-header h1 {
+        font-size: 1.1rem;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARROW FIX — Animated horizontal arrows between all sections
+   Replace the existing vertical-arrow / .flow-view > .text-center
+   blocks in your CSS with these rules.
+   ══════════════════════════════════════════════════════════ */
+
+/* The outer wrapper becomes a narrow connector column */
+.flow-view > .text-center {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding-top: 120px !important;   /* vertically centres arrow at card level */
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* The inner .vertical-arrow div */
+.vertical-arrow {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    position: relative !important;
+    gap: 0 !important;
+}
+
+/* Hide the original FontAwesome icon */
+.vertical-arrow i { display: none !important; }
+
+/* ── Animated connector line ── */
+.vertical-arrow::before {
+    content: '';
+    display: block;
+    width: 34px;
+    height: 3px;
+    background: linear-gradient(90deg, #4299e1 0%, #667eea 60%, #805ad5 100%);
+    border-radius: 2px 0 0 2px;
+    animation: connPulse 1.8s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.45);
+}
+
+/* ── Arrowhead ── */
+.vertical-arrow::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 10px solid #805ad5;
+    animation: connPulse 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 4px rgba(128, 90, 213, 0.55));
+}
+
+@keyframes connPulse {
+    0%,  100% { opacity: 0.45; }
+    50%        { opacity: 1;    }
+}
+
+.apqp-fc-phase {
+    position: relative;
+}
+/* ══════════════════════════════════════════════════════════
+   INTER-PHASE ARROW CONNECTORS
+   ══════════════════════════════════════════════════════════ */
+
+.apqp-fc-columns {
+    gap: 0 !important;   /* arrows handle spacing between cards */
+}
+
+.apqp-fc-phase {
+    margin: 0 4px;       /* small side margin so cards don't touch arrows */
+}
+
+.apqp-phase-arrow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    align-self: center;
+    width: 32px;
+    position: relative;
+    z-index: 10;
+}
+
+.apqp-phase-arrow-line {
+    display: block;
+    width: 20px;
+    height: 3px;
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 0 6px rgba(99, 102, 241, 0.4);
+    animation: apqpArrowPulse 1.8s ease-in-out infinite;
+}
+
+.apqp-phase-arrow-head {
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 11px solid #8b5cf6;
+    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.6));
+    animation: apqpArrowPulse 1.8s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes apqpArrowPulse {
+    0%, 100% { opacity: 0.45; }
+    50%       { opacity: 1;    }
+}
+
+/* ══════════════════════════════════════════════════════════
+   BOTTOM ROW — Attention Needed + Critical Path
+   ══════════════════════════════════════════════════════════ */
+
+.apqp-fc-bottom-row {
+    display: flex;
+    gap: 16px;
+    padding: 12px 20px 16px;
+    flex-shrink: 0;
+}
+
+.apqp-fc-bottom-card {
+    flex: 1;
+    background: rgba(255,255,255,0.92);
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.apqp-fc-bottom-card-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+
+/* Attention items */
+.apqp-attention-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: #444;
+    padding: 4px 0;
+}
+
+.apqp-attention-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.apqp-attention-dot.dot-warning  { background: #f59e0b; }
+.apqp-attention-dot.dot-error    { background: #ef4444; }
+.apqp-attention-dot.dot-info     { background: #6366f1; }
+.apqp-attention-dot.dot-muted    { background: #94a3b8; }
+
+/* Critical path bars */
+.apqp-critical-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.76rem;
+    color: #555;
+    margin-top: 8px;
+    margin-bottom: 3px;
+}
+
+.apqp-critical-label { font-weight: 500; }
+.apqp-critical-pct   { font-weight: 700; color: #1a1a2e; }
+
+.apqp-critical-bar-wrap {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 2px;
+}
+
+.apqp-critical-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.6s ease;
+}
+
+.apqp-phase-ready {
+    margin-top: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #555;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    padding-top: 8px;
+}
+
+.apqp-phase-ready-val.yes { color: #16a34a; }
+.apqp-phase-ready-val.no  { color: #dc2626; }
+/* PPAP Card */
+.apqp-ppap-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+.ppap-ready   { background: #dcfce7; color: #15803d; }
+.ppap-pending { background: #fef3c7; color: #b45309; }
+
+.apqp-ppap-stats {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+}
+
+.apqp-ppap-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 12px 6px;
+    min-width: 60px;
+    min-height: 70px;
+    border: 1px solid transparent;
+}
+.apqp-ppap-stat:nth-child(1) {
+    background: #e8f4fd;
+    border-color: #bfdbfe;
+}
+.apqp-ppap-stat:nth-child(1) .ppap-stat-val { color: #2563eb; }
+
+/* Completed - Green */
+.apqp-ppap-stat:nth-child(2) {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+.apqp-ppap-stat:nth-child(2) .ppap-stat-val { color: #16a34a; }
+
+/* In Progress - Amber */
+.apqp-ppap-stat:nth-child(3) {
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+.apqp-ppap-stat:nth-child(3) .ppap-stat-val { color: #d97706; }
+
+/* Delayed - Red */
+.apqp-ppap-stat:nth-child(4) {
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+.apqp-ppap-stat:nth-child(4) .ppap-stat-val { color: #dc2626; }
+
+/* Approved - Purple */
+.apqp-ppap-stat:nth-child(5) {
+    background: #f5f3ff;
+    border-color: #ddd6fe;
+}
+.apqp-ppap-stat:nth-child(5) .ppap-stat-val { color: #7c3aed; }
+
+.ppap-stat-val {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.ppap-stat-lbl {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+}
+
+.ppap-stat-val  { font-size: 1rem; font-weight: 700; color: #1a1a2e; }
+.ppap-stat-lbl  { font-size: 0.62rem; color: #888; margin-top: 2px; }
+.ppap-green  { color: #16a34a; }
+.ppap-amber  { color: #d97706; }
+.ppap-red    { color: #dc2626; }
+.ppap-purple { color: #7c3aed; }
+
+.apqp-ppap-doc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    gap: 6px;
+}
+.apqp-ppap-doc-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #333;
+    font-weight: 500;
+}
+.apqp-ppap-due {
+    font-size: 0.65rem;
+    color: #888;
+    margin-right: 4px;
+}
+.apqp-fc-header-actions {
+    position: absolute;
+    top: 16px;
+    right: 70px;
+    display: flex;
+    gap: 8px;
+}
+
+.apqp-fc-action-btn {
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 8px;
+    padding: 9px 9px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #6366f1;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
+.apqp-fc-action-btn:hover {
+    background: rgba(99, 102, 241, 0.2);
+    transform: translateY(-1px);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   ANIMATIONS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Phase Cards — slide up on load ── */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.apqp-fc-phase {
+    animation: slideUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.apqp-fc-phase:nth-child(1)  { animation-delay: 0.05s; }
+.apqp-fc-phase:nth-child(2)  { animation-delay: 0.15s; }
+.apqp-fc-phase:nth-child(3)  { animation-delay: 0.25s; }
+.apqp-fc-phase:nth-child(4)  { animation-delay: 0.35s; }
+.apqp-fc-phase:nth-child(5)  { animation-delay: 0.45s; }
+.apqp-fc-phase:nth-child(6)  { animation-delay: 0.55s; }
+.apqp-fc-phase:nth-child(7)  { animation-delay: 0.65s; }
+.apqp-fc-phase:nth-child(8)  { animation-delay: 0.75s; }
+
+/* ── Arrows — fade in after cards ── */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.apqp-phase-arrow {
+    animation: fadeIn 0.4s ease forwards;
+    opacity: 0;
+    animation-delay: 0.8s;
+}
+
+/* ── Progress bars — grow from left ── */
+/* ── Progress bars — grow from left ── */
+@keyframes growBar {
+    from { width: 0%; }
+    to   { width: 100%; }
+}
+
+.phase-bar-fill {
+    animation: none;
+    transform-origin: left;
+}
+
+@keyframes scaleBar {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+.phase-bar-fill {
+    transform-origin: left center;
+    animation: scaleBar 1s ease-out forwards;
+    animation-delay: 0.6s;
+    transform: scaleX(0);
+}
+
+.apqp-fc-overall-progress .bar-fill {
+    transform-origin: left center;
+    animation: scaleBar 1.2s ease-out forwards;
+    animation-delay: 0.3s;
+    transform: scaleX(0);
+}
+
+.apqp-critical-bar-fill {
+    transform-origin: left center;
+    animation: scaleBar 1s ease-out forwards;
+    animation-delay: 1s;
+    transform: scaleX(0);
+}
+
+/* ── Bottom cards — slide up with delay ── */
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.apqp-fc-bottom-card:nth-child(1) { animation-delay: 0.9s; }
+.apqp-fc-bottom-card:nth-child(2) { animation-delay: 1.0s; }
+.apqp-fc-bottom-card:nth-child(3) { animation-delay: 1.1s; }
+
+/* ── PPAP stat numbers — count up feel (pulse once) ── */
+@keyframes popIn {
+    0%   { transform: scale(0.5); opacity: 0; }
+    70%  { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.ppap-stat-val {
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+}
+
+.apqp-ppap-stat:nth-child(1) .ppap-stat-val { animation-delay: 1.0s; }
+.apqp-ppap-stat:nth-child(2) .ppap-stat-val { animation-delay: 1.1s; }
+.apqp-ppap-stat:nth-child(3) .ppap-stat-val { animation-delay: 1.2s; }
+.apqp-ppap-stat:nth-child(4) .ppap-stat-val { animation-delay: 1.3s; }
+.apqp-ppap-stat:nth-child(5) .ppap-stat-val { animation-delay: 1.4s; }
+
+/* ── Header — slide down ── */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.apqp-fc-header {
+    animation: slideDown 0.4s ease forwards;
+}
+
+/* ── Attention items — stagger in ── */
+@keyframes slideRight {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.apqp-attention-item {
+    animation: slideRight 0.4s ease forwards;
+    opacity: 0;
+}
+
+.apqp-attention-item:nth-child(1) { animation-delay: 1.1s; }
+.apqp-attention-item:nth-child(2) { animation-delay: 1.2s; }
+.apqp-attention-item:nth-child(3) { animation-delay: 1.3s; }
+.apqp-attention-item:nth-child(4) { animation-delay: 1.4s; }
+.apqp-attention-item:nth-child(5) { animation-delay: 1.5s; }
+
+/* ── Critical path rows — stagger in ── */
+.apqp-critical-row {
+    animation: slideRight 0.4s ease forwards;
+    opacity: 0;
+}
+
+.apqp-critical-row:nth-child(1) { animation-delay: 1.1s; }
+.apqp-critical-row:nth-child(2) { animation-delay: 1.2s; }
+.apqp-critical-row:nth-child(3) { animation-delay: 1.3s; }
+.apqp-critical-row:nth-child(4) { animation-delay: 1.4s; }
+
+/* ── Doc items in phase cards — subtle fade ── */
+@keyframes fadeLine {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.apqp-fc-doc-item {
+    animation: fadeLine 0.3s ease forwards;
+    opacity: 0;
+}
+
+.apqp-fc-doc-item:nth-child(1) { animation-delay: 0.1s; }
+.apqp-fc-doc-item:nth-child(2) { animation-delay: 0.15s; }
+.apqp-fc-doc-item:nth-child(3) { animation-delay: 0.2s; }
+.apqp-fc-doc-item:nth-child(4) { animation-delay: 0.25s; }
+.apqp-fc-doc-item:nth-child(5) { animation-delay: 0.3s; }
+.apqp-fc-doc-item:nth-child(6) { animation-delay: 0.35s; }
+.apqp-fc-doc-item:nth-child(7) { animation-delay: 0.4s; }
+.apqp-fc-doc-item:nth-child(8) { animation-delay: 0.45s; }
+
+/* ── Phase card hover — lift effect ── */
+.apqp-fc-phase {
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.apqp-fc-phase:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.06);
+}
+
+/* ── Bottom card hover ── */
+.apqp-fc-bottom-card {
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.apqp-fc-bottom-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+/* ── Spinner pulse (loading state) ── */
+@keyframes apqp-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Overall progress bar shimmer ── */
+@keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.apqp-fc-overall-progress .bar-fill {
+    transform-origin: left center;
+    animation: scaleBar 1.2s ease-out forwards;
+    animation-delay: 0.3s;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);  /* remove shimmer */
+}
+
+/* ── Reduce motion for accessibility ── */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+.o_dialog_container,
+.modal,
+.modal-dialog {
+    z-index: 1100 !important;
+}

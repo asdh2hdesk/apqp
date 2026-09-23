@@ -5,12 +5,17 @@
         <field name="name">apqp.format.template.tree</field>
         <field name="model">apqp.format.template</field>
         <field name="arch" type="xml">
-            <tree string="Format Templates" editable="bottom">
+            <list string="Format Templates" editable="bottom">
                 <field name="sequence" widget="handle"/>
+                <field name="activity"/>
                 <field name="format_name"/>
+                <field name="document_type"/>
                 <field name="phase_id"/>
+                <field name="department_ids" widget="many2many_tags"/>
+                <field name="input_field"/>
+                <field name="output_field"/>
                 <field name="active"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -29,12 +34,32 @@
                     <group>
                         <group>
                             <field name="phase_id" options="{'no_create': True}"/>
+                            <field name="activity"/>
+                            <field name="document_type"/>
                             <field name="sequence"/>
                         </group>
                         <group>
                             <field name="active"/>
                         </group>
                     </group>
+
+                    <notebook>
+                        <page string="Specifications">
+                            <group>
+                                <group string="Input">
+                                    <field name="input_field" nolabel="1" placeholder="Define input requirements..." options="{'no-attachment': True}"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Output">
+                                    <field name="output_field" nolabel="1" placeholder="Define output deliverables..." options="{'no-attachment': True}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Departments">
+                            <field name="department_ids" nolabel="1" widget="many2many_tags"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -62,7 +87,7 @@
     <record id="action_apqp_format_template" model="ir.actions.act_window">
         <field name="name">Format Templates</field>
         <field name="res_model">apqp.format.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_apqp_format_template_search"/>
         <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">

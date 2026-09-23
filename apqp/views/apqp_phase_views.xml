@@ -6,11 +6,13 @@
             <field name="name">apqp.phase.tree</field>
             <field name="model">apqp.phase</field>
             <field name="arch" type="xml">
-                <tree string="APQP Phases" editable="bottom">
+                <list string="APQP Phases" editable="bottom">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="description"/>
                     <field name="color" widget="color_picker"/>
+                    <field name="default_duration_value"/>
+                    <field name="default_duration_unit"/>
                     <field name="active"/>
                     <button
                     name="get_formview_action"
@@ -19,7 +21,7 @@
                     class="btn bi-info-circle"
                     />
 
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -35,6 +37,8 @@
                             <field name="sequence"/>
                             <field name="description"/>
                             <field name="color" widget="color_picker"/>
+                            <field name="default_duration_value"/>
+                            <field name="default_duration_unit"/>
                             <field name="active"/>
                         </group>
                     </sheet>
@@ -45,7 +49,7 @@
         <record model="ir.actions.act_window" id="action_apqp_phase">
             <field name="name">APQP Phases</field>
             <field name="res_model">apqp.phase</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
 
         <menuitem id="menu_apqp_phase" name="Phases" parent="menu_apqp_configuration" sequence="10" action="action_apqp_phase" />

@@ -2,34 +2,34 @@
 <odoo>
     <data noupdate="0">
         <!-- Format Templates -->
-        <record id="format_template_rfq_customer_data" model="apqp.format.template">
-            <field name="sequence">10</field>
-            <field name="format_name">RFQ (Customer data-drawing &amp; standard)</field>
-            <field name="phase_id" ref="phase_1"/>
-        </record>
-        
-        <record id="format_template_bill_of_material" model="apqp.format.template">
-            <field name="sequence">11</field>
-            <field name="format_name">Bill of Material</field>
-            <field name="phase_id" ref="phase_1"/>
-        </record>
-        
-        <record id="format_template_feasibility_study" model="apqp.format.template">
-            <field name="sequence">12</field>
-            <field name="format_name">Feasibility Study</field>
-            <field name="phase_id" ref="phase_1"/>
-        </record>
-        
-        <record id="format_template_design_verification" model="apqp.format.template">
-            <field name="sequence">13</field>
-            <field name="format_name">Design Verification Plan &amp; Report</field>
-            <field name="phase_id" ref="phase_2"/>
-        </record>
-        
-        <record id="format_template_customer_feedback" model="apqp.format.template">
-            <field name="sequence">14</field>
-            <field name="format_name">Customer Feedback</field>
-            <field name="phase_id" ref="phase_5"/>
-        </record>
+<!--        <record id="format_template_rfq_customer_data" model="apqp.format.template">-->
+<!--            <field name="sequence">10</field>-->
+<!--            <field name="format_name">RFQ (Customer data-drawing &amp; standard)</field>-->
+<!--            <field name="phase_id" ref="phase_1"/>-->
+<!--        </record>-->
+<!--        -->
+<!--        <record id="format_template_bill_of_material" model="apqp.format.template">-->
+<!--            <field name="sequence">11</field>-->
+<!--            <field name="format_name">Bill of Material</field>-->
+<!--            <field name="phase_id" ref="phase_1"/>-->
+<!--        </record>-->
+<!--        -->
+<!--        <record id="format_template_feasibility_study" model="apqp.format.template">-->
+<!--            <field name="sequence">12</field>-->
+<!--            <field name="format_name">Feasibility Study</field>-->
+<!--            <field name="phase_id" ref="phase_1"/>-->
+<!--        </record>-->
+<!--        -->
+<!--        <record id="format_template_design_verification" model="apqp.format.template">-->
+<!--            <field name="sequence">13</field>-->
+<!--            <field name="format_name">Design Verification Plan &amp; Report</field>-->
+<!--            <field name="phase_id" ref="phase_2"/>-->
+<!--        </record>-->
+<!--        -->
+<!--        <record id="format_template_customer_feedback" model="apqp.format.template">-->
+<!--            <field name="sequence">14</field>-->
+<!--            <field name="format_name">Customer Feedback</field>-->
+<!--            <field name="phase_id" ref="phase_5"/>-->
+<!--        </record>-->
     </data>
 </odoo>

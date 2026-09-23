@@ -6,12 +6,10 @@
         <field name="name">gantt.mom.list</field>
         <field name="model">gantt.mom</field>
         <field name="arch" type="xml">
-            <list string="Minutes of Meeting" decoration-info="1==1">
-<!--                <field name="date"/>-->
+            <list string="Minutes of Meeting">
                 <field name="subject"/>
                 <field name="project_id"/>
                 <field name="champion_id" widget="many2one_avatar_user"/>
-<!--                <field name="attendees"/>-->
             </list>
         </field>
     </record>
@@ -31,28 +29,29 @@
                     <group>
                         <group string="Meeting Info">
                             <field name="project_id"/>
-                            <field name="champion_id" widget="many2one_avatar_user"/>
+                            <field name="project_name"/>
+                            <field name="champion_id"/>
                         </group>
                         <group string="CFT Team">
-                            <field name="cft_team_ids" widget="many2many_avatar_user"/>
+                            <field name="cft_team_ids" widget="many2many_tags"/>
                         </group>
                     </group>
 
                     <notebook>
                         <page string="MOM Points">
-                            <field name="line_ids">
-                                <list editable="bottom">
+                            <field name="line_ids" context="{'default_mom_id': id}">
+                                <list>
                                     <field name="sequence" widget="handle"/>
                                     <field name="sequence" string="Sr. No." readonly="1" width="70px"/>
-                                    <field name="points" string="Points Discussed" width="320px"/>
+                                    <field name="agenda" width="200px"/>
                                     <field name="date" string="Meeting Date" width="150px"/>
-                                    <field name="attendee_ids" string="Attendees" widget="many2many_tags"/>
-                                    <field name="responsible_id" width="150px"
-                                           string="Responsible"/>
-                                    <field name="remark" string="Remark" width="250px"/>
-                                    <field name="target_date" string="Target Date" width="120px"/>
-                                    <field name="completion_date" string="Actual Completion Date" width="150px"/>
+                                    <field name="start_date" string="Start Date" optional="show"/>
+                                    <field name="completion_date" string="Actual Completion Date" width="150px" optional="show"/>
                                     <field name="status" string="Status"/>
+                                    <field name="task_id" string="Phase/Task" optional="show"/>
+                                    <button name="action_start" type="object" string="Start" class="btn-primary" 
+                                            invisible="status != 'open' or start_date != False"/>
+                                    <field name="remark" string="Remark" width="250px"/>
                                     <field name="attachment_ids" string="Attachments" widget="many2many_binary"/>
                                 </list>
                             </field>
@@ -119,5 +118,153 @@
         parent="menu_gantt_config"
         action="action_gantt_mom_master"
         sequence="30"/>
+
+    <!-- ══ MOM LINE FORM VIEW ══════════════════════════════════════════ -->
+    <record id="view_gantt_mom_line_form" model="ir.ui.view">
+        <field name="name">gantt.mom.line.form</field>
+        <field name="model">gantt.mom.line</field>
+        <field name="arch" type="xml">
+            <form string="MOM Line">
+                <header>
+                    <button name="action_start" type="object" string="Start" class="btn-primary" 
+                            invisible="status != 'open' or start_date != False"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <group>
+                    <group>
+                        <field name="mom_id" readonly="1"/>
+                        <field name="agenda"/>
+                        <field name="date"/>
+                        <field name="responsible_id"/>
+                               <field name="attendee_ids" widget="many2many_tags"/>
+                    </group>
+                     <group>
+                        <field name="task_id"/>
+                        <field name="start_date"/>
+                        <field name="completion_date"/>
+                        <field name="target_date"/>
+                    </group>
+                </group>
+                <group string="Discussion Points">
+                    <field name="discussion_point_ids" nolabel="1" context="{'default_mom_line_id': id}">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="serial_no" readonly="1" width="70px"/>
+                            <field name="name"/>
+                            <field name="raised_by_id"/>
+                            <field name="responsibility_id"/>
+                            <field name="target_date"/>
+                            <field name="actual_completion_date" readonly="1"/>
+                            <field name="attachment" widget="binary" filename="attachment_filename"/>
+                            <field name="attachment_filename"/>
+                            <field name="status"/>
+                        </list>
+                    </field>
+                </group>
+                <group>
+
+                    <field name="remark"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══ MOM DISCUSSION POINT LIST VIEW ════════════════════════════ -->
+    <record id="view_gantt_mom_discussion_point_list" model="ir.ui.view">
+        <field name="name">gantt.mom.discussion_point.list</field>
+        <field name="model">gantt.mom.discussion_point</field>
+        <field name="arch" type="xml">
+            <list string="MOM Discussion Points" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="serial_no" readonly="1" width="70px"/>
+                <field name="name"/>
+                <field name="raised_by_id"/>
+                <field name="responsibility_id"/>
+                <field name="status" widget="badge" decoration-success="status == 'closed'" decoration-info="status == 'open'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══ ALL DISCUSSION POINTS - LIST VIEW ═════════════════════════ -->
+    <record id="view_gantt_mom_dp_all_list" model="ir.ui.view">
+        <field name="name">gantt.mom.discussion_point.all.list</field>
+        <field name="model">gantt.mom.discussion_point</field>
+        <field name="arch" type="xml">
+            <list string="All Discussion Points" default_order="mom_line_id, sequence" editable="bottom">
+                <field name="project_name" string="Project"/>
+                <field name="agenda" string="Agenda"/>
+                <field name="meeting_date" string="Meeting Date"/>
+                <field name="serial_no" string="Sr. No." readonly="1"/>
+                <field name="name" string="Discussion Point"/>
+                <field name="raised_by_id" string="Raised By"/>
+                <field name="responsibility_id" string="Responsible"/>
+                <field name="target_date" string="Target Date"/>
+                <field name="actual_completion_date" string="Actual Completion"/>
+                <field name="attachment" widget="binary" filename="attachment_filename"/>
+                <field name="attachment_filename"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'closed'"
+                       decoration-warning="status == 'in_process'"
+                       decoration-info="status == 'open'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══ ALL DISCUSSION POINTS - SEARCH VIEW ═══════════════════════ -->
+    <record id="view_gantt_mom_dp_all_search" model="ir.ui.view">
+        <field name="name">gantt.mom.discussion_point.all.search</field>
+        <field name="model">gantt.mom.discussion_point</field>
+        <field name="arch" type="xml">
+            <search string="Search Discussion Points">
+                <field name="project_name" string="Project"/>
+                <field name="agenda" string="Agenda"/>
+                <field name="name" string="Discussion Point"/>
+                <field name="raised_by_id"/>
+                <field name="responsibility_id"/>
+                <filter string="Open" name="filter_open"
+                        domain="[('status','=','open')]"/>
+                <filter string="In Process" name="filter_in_process"
+                        domain="[('status','=','in_process')]"/>
+                <filter string="Closed" name="filter_closed"
+                        domain="[('status','=','closed')]"/>
+                <separator/>
+                <filter string="My Responsibility" name="filter_mine"
+                        domain="[('responsibility_id','=',uid)]"/>
+                <group string="Group By">
+                    <filter string="Project" name="by_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Agenda" name="by_agenda"
+                            context="{'group_by': 'agenda'}"/>
+                    <filter string="Status" name="by_status"
+                            context="{'group_by': 'status'}"/>
+                    <filter string="Meeting Date" name="by_date"
+                            context="{'group_by': 'meeting_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ══ ALL DISCUSSION POINTS - ACTION ════════════════════════════ -->
+    <record id="action_gantt_mom_dp_all" model="ir.actions.act_window">
+        <field name="name">All Discussion Points</field>
+        <field name="res_model">gantt.mom.discussion_point</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_gantt_mom_dp_all_search"/>
+        <field name="context">{'search_default_by_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No discussion points found!
+            </p>
+            <p>Discussion points from all MOM records will appear here.</p>
+        </field>
+    </record>
+
+    <!-- ══ MENU: All Discussion Points under main menu ═══════════════ -->
+    <menuitem
+        id="menu_gantt_mom_dp_all"
+        name="Discussion Points"
+        parent="menu_gantt_root"
+        action="action_gantt_mom_dp_all"
+        sequence="20"/>
 
 </odoo>

@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 0. Departments -->
+
+        <record id="dept_design_development" model="hr.department">
+            <field name="name">Design &amp; Development</field>
+        </record>
+
+        <record id="dept_quality_assurance" model="hr.department">
+            <field name="name">Quality Assurance</field>
+        </record>
+
+        <record id="dept_cft" model="hr.department">
+            <field name="name">CFT</field>
+        </record>
+
+        <record id="dept_cpp" model="hr.department">
+            <field name="name">CPP</field>
+        </record>
+
+        <record id="dept_packing" model="hr.department">
+            <field name="name">Packing</field>
+        </record>
+
+        <record id="dept_cnc_shop" model="hr.department">
+            <field name="name">CNC Shop</field>
+        </record>
+
+        <record id="dept_foundry_production" model="hr.department">
+            <field name="name">Foundry Production</field>
+        </record>
+
+        <!-- 1. Gate Point Master -->
+
+        <record id="gate_point_apqp_mom_development_plan_released" model="gate.point.master">
+            <field name="name">APQP MOM &amp; Development plan released</field>
+        </record>
+
+        <record id="gate_point_project_kick_off_team_formation" model="gate.point.master">
+            <field name="name">Project Kick off / Team Formation</field>
+        </record>
+
+        <record id="gate_point_qc_card_available" model="gate.point.master">
+            <field name="name">QC Card available</field>
+        </record>
+
+        <record id="gate_point_team_feasibility_commitment_sign_off_available" model="gate.point.master">
+            <field name="name">Team Feasibility Commitment sign off available</field>
+        </record>
+
+        <record id="gate_point_supplier_identification_sheet_available" model="gate.point.master">
+            <field name="name">Supplier identification sheet available</field>
+        </record>
+
+        <record id="gate_point_new_gauge_equipment_planning_released" model="gate.point.master">
+            <field name="name">New gauge equipment planning released</field>
+        </record>
+
+        <record id="gate_point_quality_goals_finalization_available" model="gate.point.master">
+            <field name="name">Quality goals finalization available</field>
+        </record>
+
+        <record id="gate_point_packaging_strategy_approval_from_customer_if_required_availa" model="gate.point.master">
+            <field name="name">Packaging strategy approval from customer if required-Available</field>
+        </record>
+
+        <record id="gate_point_all_die_drawings_component_drgs_bom_released_with_item_code" model="gate.point.master">
+            <field name="name">All Die drawings &amp; Component drgs/BOM released with item code</field>
+        </record>
+
+        <record id="gate_point_all_process_routings_completed_for_component" model="gate.point.master">
+            <field name="name">All process routings completed for component</field>
+        </record>
+
+        <record id="gate_point_casting_finish_production_order_generated_for_component" model="gate.point.master">
+            <field name="name">Casting &amp; Finish production order generated for component</field>
+        </record>
+
+        <record id="gate_point_all_type_of_fixtures_gauges_drgs_released" model="gate.point.master">
+            <field name="name">All type of fixtures &amp; Gauges drgs released</field>
+        </record>
+
+        <record id="gate_point_all_raw_material_std_parts_pr_raised" model="gate.point.master">
+            <field name="name">All raw material &amp; Std parts PR raised</field>
+        </record>
+
+        <record id="gate_point_process_flow_diagram_released" model="gate.point.master">
+            <field name="name">Process flow diagram released</field>
+        </record>
+
+        <record id="gate_point_all_die_parts_raw_material_available" model="gate.point.master">
+            <field name="name">All die parts raw material available</field>
+        </record>
+
+        <record id="gate_point_die_inspection_completed_with_scanning_inspection_reports" model="gate.point.master">
+            <field name="name">Die Inspection completed with Scanning/Inspection reports</field>
+        </record>
+
+        <record id="gate_point_final_die_check_sheet_completed" model="gate.point.master">
+            <field name="name">Final die check sheet completed</field>
+        </record>
+
+        <record id="gate_point_die_routings_orders_completed" model="gate.point.master">
+            <field name="name">Die Routings &amp; orders completed</field>
+        </record>
+
+        <record id="gate_point_all_fixtures_available" model="gate.point.master">
+            <field name="name">All fixtures available</field>
+        </record>
+
+        <record id="gate_point_all_gauges_available" model="gate.point.master">
+            <field name="name">All Gauges available</field>
+        </record>
+
+        <record id="gate_point_pre_launch_fmea_inward_to_dispatch_fmea_check_sheet" model="gate.point.master">
+            <field name="name">Pre-Launch FMEA (Inward to dispatch) &amp; FMEA Check sheet</field>
+        </record>
+
+        <record id="gate_point_pre_launch_control_plan_inward_to_dispatch" model="gate.point.master">
+            <field name="name">Pre-Launch Control Plan (Inward to dispatch)</field>
+        </record>
+
+        <record id="gate_point_cmm_inspection_programme_available_for_machined_part" model="gate.point.master">
+            <field name="name">CMM inspection Programme available for machined part</field>
+        </record>
+
+        <record id="gate_point_final_inspection_check_sheet_available" model="gate.point.master">
+            <field name="name">Final Inspection check sheet available</field>
+        </record>
+
+        <record id="gate_point_casting_trial_plan_in_cdrp" model="gate.point.master">
+            <field name="name">Casting trial plan in CDRP</field>
+        </record>
+
+        <record id="gate_point_machining_cutting_tool_availability" model="gate.point.master">
+            <field name="name">Machining cutting tool availability</field>
+        </record>
+
+        <record id="gate_point_machines_availability_for_part_machining_in_cdrp_for_machine" model="gate.point.master">
+            <field name="name">Machines availability for part machining in CDRP for machine shop</field>
+        </record>
+
+        <record id="gate_point_preparation_of_pfmea" model="gate.point.master">
+            <field name="name">Preparation of PFMEA</field>
+        </record>
+
+        <record id="gate_point_preparation_of_control_plan_process_sheet" model="gate.point.master">
+            <field name="name">Preparation of Control Plan / Process sheet</field>
+        </record>
+
+        <record id="gate_point_preparation_of_inspection_check_sheet_inspection_plan_availa" model="gate.point.master">
+            <field name="name">Preparation of inspection check sheet/Inspection plan available</field>
+        </record>
+
+        <record id="gate_point_floor_plan_layout_review" model="gate.point.master">
+            <field name="name">Floor Plan Layout review</field>
+        </record>
+
+        <record id="gate_point_preparation_of_process_capability_study_msa_plan" model="gate.point.master">
+            <field name="name">Preparation of process capability study &amp; MSA Plan</field>
+        </record>
+
+        <record id="gate_point_packing_strategy_submitted_to_qc" model="gate.point.master">
+            <field name="name">Packing strategy submitted to QC</field>
+        </record>
+
+        <record id="gate_point_time_line_resources_availability_for_other_processes" model="gate.point.master">
+            <field name="name">Time line/resources availability for other processes</field>
+        </record>
+
+        <record id="gate_point_chemical_report_submitted_to_qc" model="gate.point.master">
+            <field name="name">Chemical report submitted to QC</field>
+        </record>
+
+        <record id="gate_point_casting_trial_report_review_available" model="gate.point.master">
+            <field name="name">Casting trial report review &amp; Available</field>
+        </record>
+
+        <record id="gate_point_samples_reviewed" model="gate.point.master">
+            <field name="name">Samples reviewed</field>
+        </record>
+
+        <record id="gate_point_ppap_ots_documents_submitted_to_customer" model="gate.point.master">
+            <field name="name">PPAP/ OTS documents submitted to Customer</field>
+        </record>
+
+        <record id="gate_point_tgw_tgr" model="gate.point.master">
+            <field name="name">TGW/TGR</field>
+        </record>
+
+        <!-- 2. Gate Review -->
+
+        <record id="gate_review_gate_1_review" model="gate.review">
+            <field name="name">Gate 01 Review</field>
+        </record>
+
+        <record id="gate_review_gate_2_review" model="gate.review">
+            <field name="name">Gate 02 Review</field>
+        </record>
+
+        <record id="gate_review_gate_03_review" model="gate.review">
+            <field name="name">Gate 03 Review</field>
+        </record>
+
+        <record id="gate_review_gate_04_review" model="gate.review">
+            <field name="name">Gate 04 Review</field>
+        </record>
+
+        <record id="gate_review_gate_5_review" model="gate.review">
+            <field name="name">Gate 05 Review</field>
+        </record>
+
+        <!-- 3. Gate Review Points - Gate 1 -->
+
+        <record id="gate_review_gate_1_review_line_01" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_1_review"/>
+            <field name="point_id" ref="gate_point_apqp_mom_development_plan_released"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_1_review_line_02" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_1_review"/>
+            <field name="point_id" ref="gate_point_project_kick_off_team_formation"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_1_review_line_03" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_1_review"/>
+            <field name="point_id" ref="gate_point_qc_card_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_1_review_line_04" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_1_review"/>
+            <field name="point_id" ref="gate_point_team_feasibility_commitment_sign_off_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_1_review_line_05" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_1_review"/>
+            <field name="point_id" ref="gate_point_supplier_identification_sheet_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_cpp'))]"/>
+        </record>
+
+        <record id="gate_review_gate_1_review_line_06" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_1_review"/>
+            <field name="point_id" ref="gate_point_new_gauge_equipment_planning_released"/>
+            <field name="department_ids" eval="[(4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_1_review_line_07" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_1_review"/>
+            <field name="point_id" ref="gate_point_quality_goals_finalization_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_1_review_line_08" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_1_review"/>
+            <field name="point_id" ref="gate_point_packaging_strategy_approval_from_customer_if_required_availa"/>
+            <field name="department_ids" eval="[(4, ref('dept_packing'))]"/>
+        </record>
+
+        <!-- Gate 2 -->
+
+        <record id="gate_review_gate_2_review_line_01" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_2_review"/>
+            <field name="point_id" ref="gate_point_all_die_drawings_component_drgs_bom_released_with_item_code"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_2_review_line_02" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_2_review"/>
+            <field name="point_id" ref="gate_point_all_process_routings_completed_for_component"/>
+            <field name="department_ids" eval="[(4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_2_review_line_03" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_2_review"/>
+            <field name="point_id" ref="gate_point_casting_finish_production_order_generated_for_component"/>
+            <field name="department_ids" eval="[(4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_2_review_line_04" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_2_review"/>
+            <field name="point_id" ref="gate_point_all_type_of_fixtures_gauges_drgs_released"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_2_review_line_05" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_2_review"/>
+            <field name="point_id" ref="gate_point_all_raw_material_std_parts_pr_raised"/>
+            <field name="department_ids" eval="[(4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_2_review_line_06" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_2_review"/>
+            <field name="point_id" ref="gate_point_process_flow_diagram_released"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_2_review_line_07" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_2_review"/>
+            <field name="point_id" ref="gate_point_all_die_parts_raw_material_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <!-- Gate 03 -->
+
+        <record id="gate_review_gate_03_review_line_01" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_die_inspection_completed_with_scanning_inspection_reports"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_02" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_final_die_check_sheet_completed"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_03" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_die_routings_orders_completed"/>
+            <field name="department_ids" eval="[(4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_04" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_all_fixtures_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_cnc_shop'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_05" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_all_gauges_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_06" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_pre_launch_fmea_inward_to_dispatch_fmea_check_sheet"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_07" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_pre_launch_control_plan_inward_to_dispatch"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_08" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_cmm_inspection_programme_available_for_machined_part"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_09" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_final_inspection_check_sheet_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_10" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_casting_trial_plan_in_cdrp"/>
+            <field name="department_ids" eval="[(4, ref('dept_cpp'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_11" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_machining_cutting_tool_availability"/>
+            <field name="department_ids" eval="[(4, ref('dept_cnc_shop'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_12" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_machines_availability_for_part_machining_in_cdrp_for_machine"/>
+            <field name="department_ids" eval="[(4, ref('dept_cpp'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_13" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_preparation_of_pfmea"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_14" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_preparation_of_control_plan_process_sheet"/>
+            <field name="department_ids" eval="[(4, ref('dept_design_development'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_15" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_preparation_of_inspection_check_sheet_inspection_plan_availa"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_16" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_floor_plan_layout_review"/>
+            <field name="department_ids" eval="[(4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_03_review_line_17" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_03_review"/>
+            <field name="point_id" ref="gate_point_preparation_of_process_capability_study_msa_plan"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <!-- Gate 04 -->
+
+        <record id="gate_review_gate_04_review_line_01" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_04_review"/>
+            <field name="point_id" ref="gate_point_packing_strategy_submitted_to_qc"/>
+            <field name="department_ids" eval="[(4, ref('dept_packing'))]"/>
+        </record>
+
+        <record id="gate_review_gate_04_review_line_02" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_04_review"/>
+            <field name="point_id" ref="gate_point_time_line_resources_availability_for_other_processes"/>
+            <field name="department_ids" eval="[(4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_04_review_line_03" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_04_review"/>
+            <field name="point_id" ref="gate_point_chemical_report_submitted_to_qc"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance'))]"/>
+        </record>
+
+        <record id="gate_review_gate_04_review_line_04" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_04_review"/>
+            <field name="point_id" ref="gate_point_casting_trial_report_review_available"/>
+            <field name="department_ids" eval="[(4, ref('dept_foundry_production'))]"/>
+        </record>
+
+        <record id="gate_review_gate_04_review_line_05" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_04_review"/>
+            <field name="point_id" ref="gate_point_samples_reviewed"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance')), (4, ref('dept_cft'))]"/>
+        </record>
+
+        <record id="gate_review_gate_04_review_line_06" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_04_review"/>
+            <field name="point_id" ref="gate_point_ppap_ots_documents_submitted_to_customer"/>
+            <field name="department_ids" eval="[(4, ref('dept_quality_assurance')), (4, ref('dept_cft'))]"/>
+        </record>
+
+        <!-- Gate 5 -->
+
+        <record id="gate_review_gate_5_review_line_01" model="gate.review.point">
+            <field name="gate_id" ref="gate_review_gate_5_review"/>
+            <field name="point_id" ref="gate_point_tgw_tgr"/>
+        </record>
+
+    </data>
+</odoo>

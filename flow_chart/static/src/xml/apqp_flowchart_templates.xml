@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="apqp.FlowchartPhaseCard">
+        <div t-attf-class="apqp-fc-phase phase-theme-#{props.themeIdx % 8}">
+
+            <div class="apqp-fc-phase-header">
+                <div class="apqp-fc-phase-icon-row">
+                    <div class="apqp-fc-phase-icon">
+                        <i t-attf-class="fa #{['fa-list-alt','fa-bullseye','fa-cube','fa-cogs','fa-shield','fa-rocket','fa-search','fa-bar-chart'][props.themeIdx % 8]}" style="font-size:1.2rem;"/>
+                    </div>
+                    <div class="apqp-fc-phase-title" t-esc="props.phase.name"/>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                    <div class="apqp-fc-phase-doc-count">
+                        <t t-esc="props.phase.total_docs"/> Docs
+                    </div>
+                    <t t-if="props.phase.planned_start or props.phase.planned_end">
+                        <div style="font-size:0.65rem; color:#e0e0e0; display:flex; gap:6px; align-items:center;">
+                            <t t-if="props.phase.planned_start">
+                                <span>📅 <t t-esc="formatDate(props.phase.planned_start)"/></span>
+                            </t>
+                            <t t-if="props.phase.planned_end">
+                                <span>→ <t t-esc="formatDate(props.phase.planned_end)"/></span>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <div class="apqp-fc-state-rows" style="display:flex; gap:8px;">
+                <div style="flex:1; display:flex; flex-direction:column; gap:3px;">
+                    <t t-foreach="stateRows.slice(0, Math.ceil(stateRows.length/2))" t-as="row" t-key="row.key">
+                        <div class="apqp-fc-state-row">
+                            <span class="state-label">
+                                <span t-attf-class="state-dot dot-#{row.key}"/>
+                                <span t-esc="row.label"/>
+                            </span>
+                            <span class="state-count" t-esc="row.count"/>
+                        </div>
+                    </t>
+                </div>
+                <div style="flex:1; display:flex; flex-direction:column; gap:3px;">
+                    <t t-foreach="stateRows.slice(Math.ceil(stateRows.length/2))" t-as="row" t-key="row.key">
+                        <div class="apqp-fc-state-row">
+                            <span class="state-label">
+                                <span t-attf-class="state-dot dot-#{row.key}"/>
+                                <span t-esc="row.label"/>
+                            </span>
+                            <span class="state-count" t-esc="row.count"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Document List -->
+            <div class="apqp-fc-doc-list">
+                <t t-foreach="visibleDocs" t-as="doc" t-key="doc.id">
+                    <div t-attf-class="apqp-fc-doc-item apqp-fc-doc-clickable doc-row-#{doc.state}"
+                         t-on-click="(ev) => onDocClick(ev, doc)"
+                         t-att-title="doc.format_name">
+                        <span class="doc-type-legend"
+                              t-attf-title="#{doc.source === 'format' ? 'Format' : doc.document_type === 'confirmation' ? 'Confirmation' : 'Attachment'}">
+                            <t t-if="doc.source === 'format'"><i class="fa fa-file-text-o" style="color:#6366f1;"/></t>
+                            <t t-elif="doc.document_type === 'confirmation'">
+                                <svg width="16" height="16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;">
+                                    <circle cx="38" cy="28" r="13" stroke="currentColor" stroke-width="8" fill="none"/>
+                                    <path d="M16 75 Q16 55 38 55 Q60 55 60 75" stroke="currentColor" stroke-width="8" fill="none" stroke-linecap="round"/>
+                                    <rect x="52" y="8" width="38" height="28" rx="6" stroke="currentColor" stroke-width="7" fill="none"/>
+                                    <path d="M62 22 L68 28 L80 16" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <line x1="66" y1="36" x2="62" y2="44" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+                                </svg>
+                            </t>
+                            <t t-else=""><i class="fa fa-paperclip" style="color:#f59e0b;"/></t>
+                        </span>
+                        <span class="doc-name" t-esc="doc.format_name"/>
+                        <span class="doc-meta">
+                            <t t-if="doc.planned_end_date">
+                                <span class="doc-date" t-esc="'Due: ' + formatDate(doc.planned_end_date)"/>
+                            </t>
+<!--                            <span t-attf-class="apqp-badge apqp-badge-#{doc.state}" t-esc="doc.state.replace('_',' ')"/>-->
+                        </span>
+                    </div>
+                </t>
+                <t t-if="hasMoreDocs">
+                    <div class="apqp-fc-more-docs" t-on-click="onToggleExpand">
+                        ▾ +<t t-esc="extraDocsCount"/> more docs
+                    </div>
+                </t>
+                <t t-if="state.expanded and props.phase.documents.length > 8">
+                    <div class="apqp-fc-more-docs apqp-fc-collapse" t-on-click="onToggleExpand">
+                        ▴ Show less
+                    </div>
+                </t>
+            </div>
+
+            <!-- Phase Footer -->
+            <div class="apqp-fc-phase-footer">
+                <div class="apqp-fc-progress-wrap">
+                    <div class="apqp-fc-phase-progress-bar">
+                        <div class="phase-bar-fill" t-attf-style="width: #{props.phase.progress}%; background: #{props.phase.progress === 100 ? '#22c55e' : props.phase.progress > 0 ? '#f59e0b' : '#6b7280'};"/>
+                    </div>
+                    <span class="apqp-fc-progress-pct">
+                        <t t-esc="props.phase.progress"/>%
+                    </span>
+                </div>
+                <div t-attf-style="font-size:0.67rem; text-align:center; font-weight:600; color:#{props.phase.progress === 100 ? '#22c55e' : props.phase.progress > 0 ? '#f59e0b' : '#6b7280'};">
+                    <t t-if="props.phase.progress === 100">✅ Completed</t>
+                    <t t-elif="props.phase.progress > 0">In Progress</t>
+                    <t t-else="">Not Started</t>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- ═══════════════════════════════════════════════════════
+         Main Dashboard Template
+    ════════════════════════════════════════════════════════ -->
+    <t t-name="apqp.FlowchartDashboard">
+        <div class="apqp-flowchart-overlay">
+
+            <!-- Header -->
+            <div class="apqp-fc-header" style="position:relative;">
+                <h1>APQP &amp; PPAP Project Flow</h1>
+                <div class="apqp-fc-meta">
+                    <t t-if="state.data">
+                        <span>
+                            <span class="meta-label">Project:</span>
+                            <span class="meta-value" t-esc="state.data.project_name"/>
+                        </span>
+                        <span>
+                            <span class="meta-label">Customer:</span>
+                            <span class="meta-value" t-esc="state.data.customer"/>
+                        </span>
+                        <span>
+                            <span class="meta-label">Doc Type:</span>
+                            <span class="meta-value" t-esc="state.data.doc_type"/>
+                        </span>
+<!--                        <span>-->
+<!--                            <span class="meta-label">Launch Type:</span>-->
+<!--                            <span class="meta-value" t-esc="state.data.launch_type"/>-->
+<!--                        </span>-->
+                        <span class="apqp-fc-progress-bar-wrap">
+                            <span class="meta-label">Overall Progress:</span>
+                            <span class="meta-value" t-esc="state.data.overall_progress + '%'" style="color:#6366f1;"/>
+                            <span class="apqp-fc-overall-progress">
+                                <span class="bar-fill" t-attf-style="width: #{state.data.overall_progress}%"/>
+                            </span>
+                        </span>
+                        <span>
+                            <span class="meta-label">Champion:</span>
+                            <span class="meta-value" t-esc="state.data.champion or '—'"/>
+                        </span>
+                        <span>
+                            <span class="meta-label">Plan Start:</span>
+                            <span class="meta-value" t-esc="state.data.planned_start or '—'"/>
+                        </span>
+                        <span>
+                            <span class="meta-label">Plan End:</span>
+                            <span class="meta-value" t-esc="state.data.planned_end or '—'"/>
+                        </span>
+                    </t>
+                </div>
+
+                <!-- ✅ Buttons fixed to top-right, separate from meta row -->
+                <div style="position:absolute; top:8px; left:16px; display:flex; gap:8px; z-index:10;">
+                    <t t-if="state.data">
+                        <button class="apqp-fc-action-btn" t-on-click="onGanttClick">
+                            📊 Gantt Chart
+                        </button>
+                        <button class="apqp-fc-action-btn" t-on-click="onMomClick">
+                            📋 MOM Report
+                        </button>
+                    </t>
+                </div>
+
+                <div style="position:absolute; top:30%; right:60px; transform:translateY(-50%); display:flex; gap:14px; align-items:center; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); border-radius:8px; padding:5px 14px; font-size:0.72rem; color:#000000; z-index:10;">
+                    <span style="font-weight:700; color:#050505; letter-spacing:0.04em;">Legend:</span>
+                    <span style="display:flex; align-items:center; gap:5px;">
+                        <i class="fa fa-file-text-o" style="color:#818cf8; font-size:1rem;"/>
+                        Format
+                    </span>
+                    <span style="display:flex; align-items:center; gap:5px;">
+                        <i class="fa fa-paperclip" style="color:#fbbf24; font-size:1rem;"/>
+                        Attachment
+                    </span>
+                    <span style="display:flex; align-items:center; gap:5px;">
+                        <svg width="16" height="16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;">
+                            <circle cx="38" cy="28" r="13" stroke="currentColor" stroke-width="8" fill="none"/>
+                            <path d="M16 75 Q16 55 38 55 Q60 55 60 75" stroke="currentColor" stroke-width="8" fill="none" stroke-linecap="round"/>
+                            <rect x="52" y="8" width="38" height="28" rx="6" stroke="currentColor" stroke-width="7" fill="none"/>
+                            <path d="M62 22 L68 28 L80 16" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="66" y1="36" x2="62" y2="44" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+                        </svg>
+                        Confirmation
+                    </span>
+                </div>
+
+                <button class="apqp-fc-close-btn" t-on-click="_close" title="Close (Esc)">✕</button>
+            </div>
+
+            <!-- Body -->
+            <div class="apqp-fc-body">
+
+                <!-- Loading -->
+                <t t-if="state.loading">
+                    <div class="apqp-fc-loading">
+                        <div class="apqp-fc-spinner"/>
+                        <span>Loading flowchart data…</span>
+                    </div>
+                </t>
+
+                <!-- Error -->
+                <t t-elif="state.error">
+                    <div class="apqp-fc-loading">
+                        <span style="color:#ef4444; font-size:1.2rem;">⚠️ <t t-esc="state.error"/></span>
+                    </div>
+                </t>
+
+                <!-- ✅ FIXED: single t-foreach only on PhaseCard, not on outer <t> -->
+                <t t-elif="state.data">
+                    <div class="apqp-fc-columns">
+                        <t t-foreach="phases" t-as="phase" t-key="phase.id">
+                            <PhaseCard
+                                phase="phase"
+                                themeIdx="phase_index"
+                                onViewDocs="_onViewDocs"
+                            />
+                            <t t-if="!phase_last">
+                                <div class="apqp-phase-arrow">
+                                    <span class="apqp-phase-arrow-line"></span>
+                                    <span class="apqp-phase-arrow-head"></span>
+                                </div>
+                            </t>
+                        </t>
+                        <t t-if="phases.length === 0">
+                            <div class="apqp-fc-loading">
+                                <span style="color:#aaa;">No phase data found for this project.</span>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+
+            <t t-if="state.data">
+                <div class="apqp-fc-bottom-row">
+
+                    <div class="apqp-fc-bottom-card apqp-ppap">
+                        <div class="apqp-fc-bottom-card-title">📋 PPAP Readiness
+                            <span t-attf-class="apqp-ppap-badge #{state.data.ppap_summary.ready ? 'ppap-ready' : 'ppap-pending'}">
+                                <t t-esc="state.data.ppap_summary.ready ? '✅ Ready' : '⏳ Pending'"/>
+                            </span>
+                        </div>
+                        <div class="apqp-ppap-stats">
+                            <div class="apqp-ppap-stat">
+                                <span class="ppap-stat-val" t-esc="state.data.ppap_summary.total"/>
+                                <span class="ppap-stat-lbl">Total</span>
+                            </div>
+                            <div class="apqp-ppap-stat">
+                                <span class="ppap-stat-val ppap-green" t-esc="state.data.ppap_summary.completed"/>
+                                <span class="ppap-stat-lbl">Completed</span>
+                            </div>
+                            <div class="apqp-ppap-stat">
+                                <span class="ppap-stat-val ppap-amber" t-esc="state.data.ppap_summary.in_progress"/>
+                                <span class="ppap-stat-lbl">In Progress</span>
+                            </div>
+                            <div class="apqp-ppap-stat">
+                                <span class="ppap-stat-val ppap-red" t-esc="state.data.ppap_summary.delayed"/>
+                                <span class="ppap-stat-lbl">Delayed</span>
+                            </div>
+                            <div class="apqp-ppap-stat">
+                                <span class="ppap-stat-val ppap-purple" t-esc="state.data.ppap_summary.approved"/>
+                                <span class="ppap-stat-lbl">Approved</span>
+                            </div>
+                        </div>
+                        <div class="apqp-critical-bar-wrap" style="margin:8px 0 4px;">
+                            <div class="apqp-critical-bar-fill" t-attf-style="width: #{state.data.ppap_summary.progress}%; background: #7c3aed;"/>
+                        </div>
+                        <div style="font-size:0.7rem; color:#888; text-align:right;">
+                            <t t-esc="state.data.ppap_summary.progress"/>% Complete
+                        </div>
+                        <t t-foreach="state.data.ppap_summary.docs or []" t-as="doc" t-key="doc_index">
+                            <div class="apqp-ppap-doc-row">
+                                <span class="apqp-ppap-doc-name" t-esc="doc.name"/>
+                                <span>
+                                    <t t-if="doc.due"><span class="apqp-ppap-due" t-esc="doc.due"/></t>
+                                    <span t-attf-class="apqp-badge apqp-badge-#{doc.state}" t-esc="doc.state.replace('_',' ')"/>
+                                </span>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div class="apqp-fc-bottom-card apqp-attention">
+                        <div class="apqp-fc-bottom-card-title">⚠️ Attention Needed</div>
+                        <t t-foreach="state.data.attention_items or []" t-as="item" t-key="item_index">
+                            <div class="apqp-attention-item">
+                                <span t-attf-class="apqp-attention-dot dot-#{item.type}"/>
+                                <span t-esc="item.message"/>
+                            </div>
+                            <!-- Show sub-docs if present -->
+                            <t t-if="item.docs and item.docs.length">
+                                <t t-foreach="item.docs" t-as="adoc" t-key="adoc_index">
+                                    <div style="padding: 4px 0 4px 18px; font-size:0.72rem; color:#555; display:flex; justify-content:space-between; align-items:center;">
+                                        <span>
+                                            <i class="fa fa-file-text-o" style="margin-right:4px;"/>
+                                            <t t-esc="adoc.name"/>
+                                        </span>
+                                        <span style="color:#888; font-size:0.68rem; text-align:right;">
+                                            <t t-esc="adoc.phase"/>
+                                            <t t-if="adoc.due"> · Due: <t t-esc="adoc.due"/></t>
+<!--                                            <t t-if="adoc.prepared_by">-->
+<!--                                                <span style="display:block; color:#6366f1;">-->
+<!--                                                    <i class="fa fa-user" style="margin-right:2px;"/>Prepared: <t t-esc="adoc.prepared_by"/>-->
+<!--                                                </span>-->
+<!--                                            </t>-->
+<!--                                            <t t-if="adoc.reviewed_by">-->
+<!--                                                <span style="display:block; color:#f59e0b;">-->
+<!--                                                    <i class="fa fa-eye" style="margin-right:2px;"/>Reviewed: <t t-esc="adoc.reviewed_by"/>-->
+<!--                                                </span>-->
+<!--                                            </t>-->
+<!--                                            <t t-if="!adoc.reviewed_by">-->
+<!--                                                <span style="display:block; color:#ef4444;">-->
+<!--                                                    <i class="fa fa-clock-o" style="margin-right:2px;"/>Awaiting Review-->
+<!--                                                </span>-->
+<!--                                            </t>-->
+                                            <span style="display:block; color:#0ea5e9;">
+                                                <i class="fa fa-users" style="margin-right:2px;"/>Approver: <t t-esc="adoc.approver_dept"/>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-if="(state.data.attention_items or []).length === 0">
+                            <div class="apqp-attention-item" style="color:#aaa;">No attention items</div>
+                        </t>
+                    </div>
+
+                    <div class="apqp-fc-bottom-card apqp-critical">
+                        <div class="apqp-fc-bottom-card-title">🔴 Phase Readiness</div>
+                        <t t-foreach="state.data.critical_path or []" t-as="cp" t-key="cp_index">
+                            <div class="apqp-critical-row">
+                                <span class="apqp-critical-label" t-esc="cp.label"/>
+                                <span class="apqp-critical-pct" t-esc="cp.value + '%'"/>
+                            </div>
+                            <div class="apqp-critical-bar-wrap">
+                                <div class="apqp-critical-bar-fill" t-attf-style="width: #{cp.value}%; background: #{cp.color};"/>
+                            </div>
+                        </t>
+                        <div class="apqp-phase-ready">
+                            Phase Ready:
+                            <span t-attf-class="apqp-phase-ready-val #{state.data.phase_ready ? 'yes' : 'no'}">
+                                <t t-esc="state.data.phase_ready ? 'Yes' : 'No'"/>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

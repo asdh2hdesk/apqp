@@ -7,28 +7,45 @@
             <field name="model">xf.doc.approval.document.package</field>
             <field name="inherit_id" ref="xf_doc_approval.xf_doc_approval_document_package_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@class='oe_title']" position="before">
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_open_apqp_timeline_chart" 
-                                type="object" 
-                                class="oe_stat_button" 
-                                icon="fa-line-chart"
-                                attrs="{'invisible': [('apqp_timeline_chart_id', '=', False)]}">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_text">APQP Timeline</span>
-                            </div>
-                        </button>
-                    </div>
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button name="action_open_apqp_timeline_chart" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-line-chart"
+                            invisible="not apqp_timeline_chart_id">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">APQP Timeline</span>
+                        </div>
+                    </button>
                 </xpath>
                 
                 <!-- Add phase_id to document_approval_ids tree view -->
-                <xpath expr="//field[@name='document_approval_ids']/tree/field[@name='formate']" position="after">
-                    <field name="phase_id" optional="show" readonly="0"/>
+                <xpath expr="//field[@name='document_approval_ids']/list/field[@name='formate']" position="after">
+                    <field name="phase_id" optional="show" readonly="parent.state != 'draft'"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='document_approval_ids']/list/field[@name='plan_start_date']" position="attributes">
+                    <attribute name="readonly">parent.state != 'draft'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='document_approval_ids']/list/field[@name='plan_end_date']" position="attributes">
+                    <attribute name="readonly">parent.state != 'draft'</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='project_end_date']" position="after">
-                    <field name="apqp_timeline_chart_id" readonly="1"/>
+                <xpath expr="//field[@name='target_date']" position="after">
+                    <label for="phase_timeframe_ids" string="Phase Timeframes" invisible="state != 'draft'"/>
+                    <div class="o_row" invisible="state != 'draft'">
+                        <field name="phase_timeframe_ids" widget="many2many_tags" readonly="1" invisible="1"/>
+                        <button name="action_configure_phase_timeframes" 
+                                type="object" 
+                                string="Phase TimeFrames Configure"
+                                class="btn-link" 
+                                icon="fa-pencil"/>
+                    </div>
                 </xpath>
+
+<!--                <xpath expr="//field[@name='project_end_date']" position="after">-->
+<!--                    <field name="apqp_timeline_chart_id" readonly="1"/>-->
+<!--                </xpath>-->
 
             </field>
         </record>
